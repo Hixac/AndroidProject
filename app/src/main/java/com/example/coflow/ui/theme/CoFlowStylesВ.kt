@@ -112,11 +112,53 @@ fun coFlowAuthFieldColors() = OutlinedTextFieldDefaults.colors(
     focusedPlaceholderColor = CoFlowColors.TextSecondary,
     unfocusedPlaceholderColor = CoFlowColors.TextSecondary,
 
-    // Цвет курсора
-    cursorColor = CoFlowColors.Blue,
+    // Цвет курсора - лиза сказала пока не надо курсос
+    //cursorColor = CoFlowColors.Blue,
 
     // Оформление ошибок
     errorBorderColor = CoFlowColors.Error,
     errorLabelColor = CoFlowColors.Error,
     errorSupportingTextColor = CoFlowColors.Error
 )
+
+/* ДЛЯ КИРЮХИ И ВАЛЕРЫ, СМОТРИТЕ ТУТ ПЖ
+ * Общие Glassmorphism-стили CoFlow.
+ * Используются на экранах задач, проектов, профиля и других окнах.
+ */
+object CoFlowGlassStyles {
+
+    // Полупрозрачная поверхность карточек.
+    val Surface = Color(0xBFFFFFFF)
+
+    // Более прозрачная поверхность для панелей и кнопок.
+    val ControlSurface = Color(0x99FFFFFF)
+
+    // Тонкая обводка стеклянных элементов.
+    val Border = Color(0xB3FFFFFF)
+
+    // Голубая обводка карточек.
+    val BlueBorder = Color(0x669BBEFF)
+
+    // ТЕНЬ
+    val Shadow = Color(0x120E2C62)
+
+    // Скругления для разных элементов.
+    val CardShape = RoundedCornerShape(18.dp)
+    val ControlShape = RoundedCornerShape(16.dp)
+    val NavigationShape = RoundedCornerShape(22.dp)
+
+    // Активный пункт нижней навигации.
+    val SelectedItemShape = RoundedCornerShape(14.dp)
+}
+
+// Отдельный фон для основных экранов приложения (но фон авторизации другой)
+fun coFlowTasksBackgroundBrush(): Brush {
+    return Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFF2F6FF),
+            Color(0xFFEAF1FF),
+            Color(0xFFEDF3FF)
+        )
+    )
+}
+
