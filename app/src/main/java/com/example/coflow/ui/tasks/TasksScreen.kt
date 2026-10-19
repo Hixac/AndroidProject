@@ -1,5 +1,7 @@
 package com.example.coflow.ui.tasks
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -72,7 +74,9 @@ private data class TaskGroup(
 )
 
 @Composable
-fun TasksScreen() {
+fun TasksScreen(
+    onNavigateToCreateTask: () -> Unit
+) {
     var grouping by remember {
         mutableStateOf(TaskGrouping.STATUS)
     }
@@ -300,9 +304,7 @@ fun TasksScreen() {
                                 .clip(CircleShape)
                                 .background(CoFlowColors.Blue)
                                 .clickable {
-                                    dialogTitle = "Создание задачи"
-                                    dialogMessage =
-                                        "Интерфейс создания задачи ещё не реализован."
+                                    onNavigateToCreateTask()
                                 },
                             contentAlignment = Alignment.Center
                         ) {
@@ -1004,3 +1006,90 @@ private fun CoFlowIcon(
         }
     }
 }
+
+// ============================================================================
+// ПРЕВЬЮ (Previews)
+// ============================================================================
+
+// Базовое превью: стандартный размер современного смартфона.
+@Preview(
+    name = "Tasks Screen - Phone",
+    showBackground = true,
+    widthDp = 390,
+    heightDp = 844,
+    showSystemUi = true
+)
+@Composable
+private fun TasksScreenPreview() {
+    // Используем CoFlowTheme вместо MaterialTheme, чтобы корректно отобразились
+    // ваши кастомные цвета (CoFlowColors.Blue и т.д.)
+    com.example.coflow.ui.theme.CoFlowTheme {
+        TasksScreen(
+            onNavigateToCreateTask = {
+                // В режиме превью навигация не работает.
+                // Мы можем вывести сообщение в лог, чтобы убедиться, что клик регистрируется.
+                println("🔥 PREVIEW: Нажата кнопка создания задачи (+)")
+            }
+        )
+    }
+}
+
+// Превью с тёмной темой.
+@Preview(
+    name = "Tasks Screen - Dark Theme",
+    showBackground = true,
+    widthDp = 390,
+    heightDp = 844,
+    showSystemUi = true,
+    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+private fun TasksScreenDarkPreview() {
+    com.example.coflow.ui.theme.CoFlowTheme {
+        TasksScreen(
+            onNavigateToCreateTask = {
+                println("🔥 PREVIEW: Нажата кнопка создания задачи (+)")
+            }
+        )
+    }
+}
+
+// Превью с большим шрифтом (для проверки доступности).
+@Preview(
+    name = "Tasks Screen - Large Font",
+    showBackground = true,
+    widthDp = 390,
+    heightDp = 844,
+    fontScale = 1.5f
+)
+@Composable
+private fun TasksScreenLargeFontPreview() {
+    com.example.coflow.ui.theme.CoFlowTheme {
+        TasksScreen(
+            onNavigateToCreateTask = {
+                println("🔥 PREVIEW: Нажата кнопка создания задачи (+)")
+            }
+        )
+    }
+}
+
+// Превью с ландшафтной ориентацией (для проверки адаптивности).
+@Preview(
+    name = "Tasks Screen - Landscape",
+    showBackground = true,
+    widthDp = 844,
+    heightDp = 390,
+    showSystemUi = true
+)
+@Composable
+private fun TasksScreenLandscapePreview() {
+    com.example.coflow.ui.theme.CoFlowTheme {
+        TasksScreen(
+            onNavigateToCreateTask = {
+                println("🔥 PREVIEW: Нажата кнопка создания задачи (+)")
+            }
+        )
+    }
+}
+
+
