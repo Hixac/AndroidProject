@@ -1,7 +1,7 @@
 package com.example.coflow.data
 
+import com.example.coflow.models.UserModel
 import java.time.LocalDateTime
-import kotlin.time.Instant
 
 /** Перечисление для статусов задачи */
 enum class TaskStatus (val code:Int) {
@@ -40,7 +40,6 @@ class TaskModel (
     init {
         title = _title
         description = _description
-        require(deadline.isAfter(LocalDateTime.now())) { "Дедлайн должен быть в будущем" }
     }
 
     fun ClearPerformers() {
