@@ -36,6 +36,7 @@ import com.example.coflow.ui.theme.CoFlowSpacing
 import com.example.coflow.ui.theme.coFlowAuthFieldColors
 import com.example.coflow.ui.theme.coFlowBackgroundBrush
 import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 // Режим экрана: авторизация или регистрация.
 enum class AuthMode {
@@ -246,7 +247,7 @@ fun AuthScreen(
 @Composable
 fun AuthRoute(
     onAuthSuccess: () -> Unit,
-    viewModel: AuthViewModel = AuthViewModel(),
+    viewModel: AuthViewModel = viewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
