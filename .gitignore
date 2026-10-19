@@ -42,8 +42,11 @@ render.experimental.xml
 *.jks
 *.keystore
 
-# Google Services (e.g. APIs or Firebase)
+# Google Services / секреты — управляются Doppler (см. docs/SECRETS.md)
 google-services.json
+*.jks
+*.keystore
+.doctor/
 
 # Android Profiling
 *.hprof
