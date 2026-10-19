@@ -24,6 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
+import com.example.coflow.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -91,7 +94,7 @@ fun AuthScreen(
                 ) {
                     // Две отдельные строки исключают вывод символов "\\n".
                     Text(
-                        text = "Добро пожаловать",
+                        text = stringResource(R.string.auth_welcome_title),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = CoFlowColors.TextPrimary,
@@ -109,28 +112,33 @@ fun AuthScreen(
 
                     // Подзаголовок зависит от режима формы.
                     Text(
-                        text = if (state.mode == AuthMode.LOGIN) {
-                            "Авторизация"
-                        } else {
-                            "Регистрация"
-                        },
-                        style = MaterialTheme.typography.titleSmall,
+                        text = stringResource(
+                            if (state.mode == AuthMode.LOGIN) R.string.auth_subtitle_login
+                            else R.string.auth_subtitle_register
+                        ),
+                        style = MaterialTheme.typography.titleMedium,
                         color = CoFlowColors.TextPrimary
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Поле почты использует общие цвета и скругления.
+                    // Поле почты
                     OutlinedTextField(
                         value = state.contact,
                         onValueChange = onContactChange,
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Почта") },
-                        placeholder = { Text("name@example.com") },
+                        label = {
+                            Text(stringResource(R.string.auth_label_contact))
+                        },
+                        placeholder = {
+                            Text(stringResource(R.string.auth_placeholder_contact))
+                        },
                         singleLine = true,
                         isError = state.contactError != null,
-                        supportingText = {
-                            state.contactError?.let { Text(it) }
+                        supportingText = state.contactError?.let { error ->
+                            {
+                                Text(text = error)
+                            }
                         },
                         shape = CoFlowShapes.Input,
                         colors = coFlowAuthFieldColors()
@@ -142,9 +150,15 @@ fun AuthScreen(
                     OutlinedTextField(
                         value = state.password,
                         onValueChange = onPasswordChange,
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Пароль") },
-                        placeholder = { Text("Не менее 8 символов") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 0.dp),
+                        label = {
+                            Text(stringResource(R.string.auth_label_password))
+                        },
+                        placeholder = {
+                            Text(stringResource(R.string.auth_placeholder_password))
+                        },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         isError = state.passwordError != null,
@@ -162,14 +176,22 @@ fun AuthScreen(
                         OutlinedTextField(
                             value = state.confirmPassword,
                             onValueChange = onConfirmChange,
-                            modifier = Modifier.fillMaxWidth(),
-                            label = { Text("Повторите пароль") },
-                            placeholder = { Text("Введите пароль ещё раз") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 0.dp),
+                            label = {
+                                Text(stringResource(R.string.auth_label_confirm_password))
+                            },
+                            placeholder = {
+                                Text(stringResource(R.string.auth_placeholder_confirm_password))
+                            },
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
                             isError = state.confirmError != null,
-                            supportingText = {
-                                state.confirmError?.let { Text(it) }
+                            supportingText = state.confirmError?.let { error ->
+                                {
+                                    Text(text = error)
+                                }
                             },
                             shape = CoFlowShapes.Input,
                             colors = coFlowAuthFieldColors()
@@ -191,12 +213,11 @@ fun AuthScreen(
                         )
                     ) {
                         Text(
-                            text = if (state.mode == AuthMode.LOGIN) {
-                                "Войти"
-                            } else {
-                                "Зарегистрироваться"
-                            },
-                            fontWeight = FontWeight.Medium
+                            text = stringResource(
+                                if (state.mode == AuthMode.LOGIN) R.string.auth_button_login
+                                else R.string.auth_button_register
+                            ),
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
 
@@ -205,13 +226,11 @@ fun AuthScreen(
                     // Переключатель режима; существующие проверки не удалены.
                     TextButton(onClick = onToggleMode) {
                         Text(
-                            text = if (state.mode == AuthMode.LOGIN) {
-                                "Ещё нет аккаунта? Зарегистрироваться"
-                            } else {
-                                "Уже существует аккаунт? Войти"
-                            },
-                            color = CoFlowColors.TextPrimary,
-                            textAlign = TextAlign.Center
+                            text = stringResource(
+                                if (state.mode == AuthMode.LOGIN) R.string.auth_toggle_to_register
+                                else R.string.auth_toggle_to_login
+                            ),
+                            color = CoFlowColors.TextPrimary
                         )
                     }
                 }
