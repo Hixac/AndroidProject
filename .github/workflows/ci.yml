@@ -2,9 +2,17 @@ name: CI pipeline
 
 on: [push, pull_request]
 
+# Отменяем предыдущий прогон на той же ветке — не жжём минуты.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -19,11 +27,34 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      # --- Doppler ---------------------------------------------------------
+      - name: Install Doppler CLI
+        if: env.DOPPLER_TOKEN != ''
+        uses: dopplerhq/cli-action@v3
+
+      - name: Inject secrets into env
+        if: env.DOPPLER_TOKEN != ''
+        run: |
+          doppler secrets download --no-file --format json --silent \
+            | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> "$GITHUB_ENV"
+
+      - name: No secrets available (fork PR?) — skip build
+        if: env.DOPPLER_TOKEN == ''
+        run: echo "::warning::DOPPLER_TOKEN недоступен — сборка с Firebase-конфигом пропущена"
+
+      # --- Build -----------------------------------------------------------
       - name: Grant execute permission for gradlew
+        if: env.DOPPLER_TOKEN != ''
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        if: env.DOPPLER_TOKEN != ''
+        run: ./gradlew build --no-daemon
 
-      - name: Run tests
-        run: ./gradlew test
+      - name: Upload APK
+        if: env.DOPPLER_TOKEN != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: ignore
