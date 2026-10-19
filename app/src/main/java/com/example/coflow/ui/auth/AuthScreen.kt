@@ -27,6 +27,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
+import com.example.coflow.R
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -97,11 +99,7 @@ fun AuthScreen(
                 ) {
                     // Заголовок формы.
                     Text(
-                        text = if (state.mode == AuthMode.LOGIN) {
-                            "Добро пожаловать\nв CoFlow"
-                        } else {
-                            "Добро пожаловать\nв CoFlow"
-                        },
+                        text = stringResource(R.string.auth_welcome_title),
                         style = MaterialTheme.typography.headlineMedium,
                         color = CoFlowColors.TextPrimary,
                         textAlign = TextAlign.Center
@@ -112,11 +110,10 @@ fun AuthScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = if (state.mode == AuthMode.LOGIN) {
-                            "Авторизация"
-                        } else {
-                            "Регистрация"
-                        },
+                        text = stringResource(
+                            if (state.mode == AuthMode.LOGIN) R.string.auth_subtitle_login
+                            else R.string.auth_subtitle_register
+                        ),
                         style = MaterialTheme.typography.titleMedium,
                         color = CoFlowColors.TextPrimary
                     )
@@ -124,21 +121,21 @@ fun AuthScreen(
                     // Уменьшенный отступ от подписи до первого поля.
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Поле почты или телефона.
+                    // Поле почты
                     OutlinedTextField(
                         value = state.contact,
                         onValueChange = onContactChange,
                         modifier = Modifier.fillMaxWidth(),
                         label = {
-                            Text("Почта")
+                            Text(stringResource(R.string.auth_label_contact))
                         },
                         placeholder = {
-                            Text("name@example.com")
+                            Text(stringResource(R.string.auth_placeholder_contact))
                         },
                         singleLine = true,
                         isError = state.contactError != null,
                         supportingText = state.contactError?.let { error ->
-                            @Composable {
+                            {
                                 Text(text = error)
                             }
                         },
@@ -155,10 +152,10 @@ fun AuthScreen(
                             .fillMaxWidth()
                             .padding(top = 0.dp),
                         label = {
-                            Text("Пароль")
+                            Text(stringResource(R.string.auth_label_password))
                         },
                         placeholder = {
-                            Text("Не менее 8 символов")
+                            Text(stringResource(R.string.auth_placeholder_password))
                         },
                         singleLine = true,
                         isError = state.passwordError != null,
@@ -180,15 +177,15 @@ fun AuthScreen(
                                 .fillMaxWidth()
                                 .padding(top = 0.dp),
                             label = {
-                                Text("Повторите пароль")
+                                Text(stringResource(R.string.auth_label_confirm_password))
                             },
                             placeholder = {
-                                Text("Введите пароль ещё раз")
+                                Text(stringResource(R.string.auth_placeholder_confirm_password))
                             },
                             singleLine = true,
                             isError = state.confirmError != null,
                             supportingText = state.confirmError?.let { error ->
-                                @Composable {
+                                {
                                     Text(text = error)
                                 }
                             },
@@ -213,11 +210,10 @@ fun AuthScreen(
                         )
                     ) {
                         Text(
-                            text = if (state.mode == AuthMode.LOGIN) {
-                                "Войти"
-                            } else {
-                                "Зарегистрироваться"
-                            },
+                            text = stringResource(
+                                if (state.mode == AuthMode.LOGIN) R.string.auth_button_login
+                                else R.string.auth_button_register
+                            ),
                             style = MaterialTheme.typography.labelLarge
                         )
                     }
@@ -229,11 +225,10 @@ fun AuthScreen(
                         onClick = onToggleMode
                     ) {
                         Text(
-                            text = if (state.mode == AuthMode.LOGIN) {
-                                "Ещё нет аккаунта? Зарегистрироваться"
-                            } else {
-                                "Уже существует аккаунт? Войти"
-                            },
+                            text = stringResource(
+                                if (state.mode == AuthMode.LOGIN) R.string.auth_toggle_to_register
+                                else R.string.auth_toggle_to_login
+                            ),
                             color = CoFlowColors.TextPrimary
                         )
                     }

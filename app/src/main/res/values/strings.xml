@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">CoFlow</string>
+    <!-- Заголовки -->
+    <string name="auth_welcome_title">Добро пожаловать\nв CoFlow</string>
+    <string name="auth_subtitle_login">Авторизация</string>
+    <string name="auth_subtitle_register">Регистрация</string>
+
+    <!-- Поля ввода -->
+    <string name="auth_label_contact">Почта</string>
+    <string name="auth_placeholder_contact">name@example.com</string>
+
+    <string name="auth_label_password">Пароль</string>
+    <string name="auth_placeholder_password">Не менее 8 символов</string>
+
+    <string name="auth_label_confirm_password">Повторите пароль</string>
+    <string name="auth_placeholder_confirm_password">Введите пароль ещё раз</string>
+
+    <!-- Кнопки -->
+    <string name="auth_button_login">Войти</string>
+    <string name="auth_button_register">Зарегистрироваться</string>
+    <string name="auth_toggle_to_register">Ещё нет аккаунта? Зарегистрироваться</string>
+    <string name="auth_toggle_to_login">Уже существует аккаунт? Войти</string>
+
+    <!-- Ошибки -->
+    <string name="auth_error_invalid_contact">Проверьте формат почты или телефона</string>
+    <string name="auth_error_short_password">Минимум 8 символов</string>
+
+
 </resources>
