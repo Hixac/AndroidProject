@@ -14,8 +14,9 @@ data class Task(
 )
 
 // Состояния задачи для группировки
-enum class TaskStatus {
+/*enum class TaskStatus {
     TODO,        // К исполнению
     IN_PROGRESS, // В процессе
     DONE         // Сделано
 }
+*/
