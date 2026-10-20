@@ -27,14 +27,6 @@ misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
 
-# IntelliJ (из вашей ветки)
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-
 # OS
 .DS_Store
 
