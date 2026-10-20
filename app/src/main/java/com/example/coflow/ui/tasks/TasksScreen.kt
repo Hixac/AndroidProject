@@ -51,7 +51,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.coflow.data.Task
-import com.example.coflow.data.TaskStatus
+import com.example.coflow.models.TaskStatus
 import com.example.coflow.data.TasksTestData
 import com.example.coflow.ui.theme.CoFlowColors
 import com.example.coflow.ui.theme.CoFlowGlassStyles

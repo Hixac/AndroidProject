@@ -1,6 +1,7 @@
 package com.example.coflow.data
 
 import java.time.LocalDate
+import com.example.coflow.models.TaskStatus
 
 /**
  * Временные данные для проверки экрана задач.

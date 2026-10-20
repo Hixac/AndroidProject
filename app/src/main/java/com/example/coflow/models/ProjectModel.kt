@@ -1,6 +1,5 @@
 package com.example.coflow.models
 
-import com.example.coflow.data.TaskModel
 import java.time.LocalDateTime
 
 class ProjectModel (
