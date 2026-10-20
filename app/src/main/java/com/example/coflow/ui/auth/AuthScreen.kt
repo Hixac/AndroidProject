@@ -71,13 +71,6 @@ fun AuthScreen(
                         color = CoFlowColors.TextPrimary,
                         textAlign = TextAlign.Center
                     )
-                    Text(
-                        text = "в CoFlow",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = CoFlowColors.TextPrimary,
-                        textAlign = TextAlign.Center
-                    )
 
                     Spacer(modifier = Modifier.height(CoFlowSpacing.Small))
 
@@ -98,8 +91,8 @@ fun AuthScreen(
                             value = state.username,
                             onValueChange = onUsernameChange,
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("Имя пользователя") },
-                            placeholder = { Text("Как к вам обращаться?") },
+                            label = { Text(stringResource(R.string.auth_label_username))},
+                            placeholder = { Text(stringResource(R.string.auth_placeholder_username))},
                             singleLine = true,
                             isError = state.usernameError != null,
                             supportingText = state.usernameError?.let { { Text(it) } },

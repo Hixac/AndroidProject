@@ -6,6 +6,9 @@
     <string name="auth_subtitle_register">Регистрация</string>
 
     <!-- Поля ввода -->
+    <string name="auth_label_username">Имя пользователя</string>
+    <string name="auth_placeholder_username">Как к вам обращаться?</string>
+
     <string name="auth_label_contact">Почта</string>
     <string name="auth_placeholder_contact">name@example.com</string>
 
