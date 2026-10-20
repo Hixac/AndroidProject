@@ -6,6 +6,9 @@
         <string name="auth_subtitle_register">Sign up</string>
 
         <!-- Поля ввода -->
+        <string name="auth_label_username">Username</string>
+        <string name="auth_placeholder_username">What should I call you?</string>
+
         <string name="auth_label_contact">Email</string>
         <string name="auth_placeholder_contact">name@example.com</string>
 
@@ -25,5 +28,6 @@
         <!-- Ошибки -->
         <string name="auth_error_invalid_contact">Check email or phone format</string>
         <string name="auth_error_short_password">Minimum 8 characters</string>
+        <string name="auth_error_not_equal_password">The passwords do not match.</string>
 
 </resources>

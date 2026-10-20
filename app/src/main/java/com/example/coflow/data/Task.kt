@@ -2,7 +2,6 @@
 package com.example.coflow.data
 
 import java.time.LocalDate
-import com.example.coflow.models.TaskStatus
 
 // Модель одной задачи.
 data class Task(
@@ -13,3 +12,10 @@ data class Task(
     val status: TaskStatus,
     val isMine: Boolean = true
 )
+
+// Состояния задачи для группировки
+enum class TaskStatus {
+    TODO,        // К исполнению
+    IN_PROGRESS, // В процессе
+    DONE         // Сделано
+}
