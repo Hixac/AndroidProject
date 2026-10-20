@@ -57,7 +57,10 @@ fun ChoseProjectScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> 
             LazyColumn(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
                 items(filteredProjects) { project ->
                     val isSelected = project == selectedProject
+
+                    // ИСПРАВЛЕНО: передаем isSelected в карточку
                     CoFlowGlassCard(
+                        isSelected = isSelected,
                         modifier = Modifier.height(52.dp).clickable { selectedProject = project }
                     ) {
                         Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp), contentAlignment = Alignment.CenterStart) {

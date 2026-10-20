@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.example.coflow.ui.components.*
 import com.example.coflow.ui.theme.*
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.clickable
 
 data class CreateTaskFormData(
     val title: String, val description: String, val assignees: String,
@@ -60,22 +59,24 @@ fun CreateTaskScreen(
                     label = "Описание", value = description, onValueChange = { description = it.take(250) },
                     placeholder = "Введите описание задачи", singleLine = false, maxLength = 250
                 )
-                // Поля-селекторы: isSelector = true отключает клавиатуру, modifier.clickable обрабатывает навигацию
+
+                // Клик сработает по ВСЕМУ полю. Клавиатура не вылезет благодаря readOnly
                 CoFlowGlassTextField(
                     label = "Исполнители", value = assignees, onValueChange = { assignees = it },
                     placeholder = "Выберите исполнителей", leadingIcon = "person", trailingIcon = "chevron",
-                    isSelector = true, modifier = Modifier.clickable { onNavigateToAssignees() }
+                    onClick = { onNavigateToAssignees() }
                 )
+
                 CoFlowGlassTextField(
                     label = "Проект", value = project, onValueChange = { project = it },
                     placeholder = "Выберите проект", leadingIcon = "folder", trailingIcon = "chevron",
-                    isSelector = true, modifier = Modifier.clickable { onNavigateToProject() }
+                    onClick = { onNavigateToProject() }
                 )
+
                 CoFlowGlassTextField(
                     label = "Дата окончания", value = dueDate, onValueChange = { dueDate = it },
                     placeholder = "Выберите дату", leadingIcon = "calendar", trailingIcon = "chevron",
-                    isSelector = true,
-                    modifier = Modifier.clickable { onNavigateToDate() },
+                    onClick = { onNavigateToDate() },
                     keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                     keyboardActions = androidx.compose.foundation.text.KeyboardActions(onDone = { focusManager.clearFocus() })
                 )
