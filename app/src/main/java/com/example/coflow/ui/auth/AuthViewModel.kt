@@ -1,9 +1,13 @@
 package com.example.coflow.ui.auth
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.coflow.data.firebase.AuthRepository
+import com.example.coflow.data.firebase.FirebaseAuthRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 enum class AuthMode {
     LOGIN,
@@ -12,19 +16,21 @@ enum class AuthMode {
 
 data class AuthUiState(
     val mode: AuthMode = AuthMode.LOGIN,
-    val username: String = "",          // <-- НОВОЕ: Имя пользователя
+    val username: String = "",          // Имя пользователя
     val contact: String = "",           // Почта или телефон
     val password: String = "",          // Пароль
     val confirmPassword: String = "",   // Подтверждение пароля
-    val usernameError: String? = null,  // <-- НОВОЕ: Ошибка имени
+    val usernameError: String? = null,  // Ошибка имени
     val contactError: String? = null,
     val passwordError: String? = null,
     val confirmError: String? = null,
     val isSubmitting: Boolean = false,
+    val errorMessage: String? = null,
 )
 
-class AuthViewModel : ViewModel() {
-
+class AuthViewModel(
+    private val repository: AuthRepository = FirebaseAuthRepositoryImpl()
+) : ViewModel() {
     private val _state = MutableStateFlow(AuthUiState())
     val state: StateFlow<AuthUiState> = _state.asStateFlow()
 
@@ -50,7 +56,7 @@ class AuthViewModel : ViewModel() {
         _state.value = AuthUiState(mode = newMode)
     }
 
-    fun onSubmit() {
+    fun onSubmit(onAuthSuccess: () -> Unit) {
         val current = _state.value
 
         // Валидация имени пользователя (только для регистрации)
@@ -73,12 +79,46 @@ class AuthViewModel : ViewModel() {
             "Пароли не совпадают"
         } else null
 
+        if (usernameError != null || contactError != null || passwordError != null || confirmError != null) {
+            _state.value = current.copy(
+                usernameError = usernameError,
+                contactError = contactError,
+                passwordError = passwordError,
+                confirmError = confirmError,
+                isSubmitting = false
+            )
+            return
+        }
+
         _state.value = current.copy(
-            usernameError = usernameError,
-            contactError = contactError,
-            passwordError = passwordError,
-            confirmError = confirmError,
-            isSubmitting = false // Здесь можно запустить реальную загрузку
+            isSubmitting = true,
+            usernameError = null,
+            contactError = null,
+            passwordError = null,
+            confirmError = null
         )
+
+        // Вызов бэкенда
+        viewModelScope.launch {
+            val result = if (current.mode == AuthMode.REGISTER) {
+                repository.register(current.contact, current.password, current.username)
+            } else {
+                repository.login(current.contact, current.password)
+            }
+
+            result.fold(
+                onSuccess = {
+                    _state.value = _state.value.copy(isSubmitting = false)
+                    onAuthSuccess()
+                },
+                onFailure = { error ->
+                    _state.value = _state.value.copy(
+                        isSubmitting = false,
+                        errorMessage = error.message
+                    )
+                }
+            )
+        }
     }
+
 }
