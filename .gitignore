@@ -27,14 +27,6 @@ misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
 
-# IntelliJ (из вашей ветки)
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-
 # OS
 .DS_Store
 
@@ -42,8 +34,11 @@ render.experimental.xml
 *.jks
 *.keystore
 
-# Google Services (e.g. APIs or Firebase)
+# Google Services / секреты — управляются Doppler (см. docs/SECRETS.md)
 google-services.json
+*.jks
+*.keystore
+.doctor/
 
 # Android Profiling
 *.hprof
