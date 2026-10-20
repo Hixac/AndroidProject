@@ -27,6 +27,7 @@
     <!-- Ошибки -->
     <string name="auth_error_invalid_contact">Проверьте формат почты или телефона</string>
     <string name="auth_error_short_password">Минимум 8 символов</string>
+    <string name="auth_error_not_equal_password">Пароли не совпадают</string>
 
 
 </resources>

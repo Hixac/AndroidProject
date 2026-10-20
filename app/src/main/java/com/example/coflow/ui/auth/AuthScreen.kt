@@ -145,7 +145,7 @@ fun AuthScreen(
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
                             isError = state.confirmError != null,
-                            supportingText = state.confirmError?.let { { Text(it) } },
+                            supportingText = state.confirmError?.let { { Text(stringResource((R.string.auth_error_not_equal_password))) } },
                             shape = CoFlowShapes.Input,
                             colors = coFlowAuthFieldColors()
                         )
