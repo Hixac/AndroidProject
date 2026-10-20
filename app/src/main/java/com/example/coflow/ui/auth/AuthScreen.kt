@@ -47,6 +47,7 @@ fun AuthScreen(
         ) {
             CoFlowAuthCard(modifier = Modifier.fillMaxWidth()) {
                 Text(
+                    modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.auth_welcome_title),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
@@ -57,9 +58,11 @@ fun AuthScreen(
                 Spacer(modifier = Modifier.height(CoFlowSpacing.Small))
 
                 Text(
+                    modifier = Modifier.fillMaxWidth(),
                     text = stringResource(if (state.mode == AuthMode.LOGIN) R.string.auth_subtitle_login else R.string.auth_subtitle_register),
                     style = MaterialTheme.typography.titleMedium,
-                    color = CoFlowColors.TextPrimary
+                    color = CoFlowColors.TextPrimary,
+                    textAlign = TextAlign.Center
                 )
 
                 Spacer(modifier = Modifier.height(CoFlowSpacing.Medium))
@@ -123,9 +126,11 @@ fun AuthScreen(
 
                 TextButton(onClick = onToggleMode) {
                     Text(
+                        modifier = Modifier.fillMaxWidth(),
                         text = stringResource(if (state.mode == AuthMode.LOGIN) R.string.auth_toggle_to_register else R.string.auth_toggle_to_login),
                         color = CoFlowColors.TextPrimary,
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -134,7 +139,8 @@ fun AuthScreen(
 }
 
 @Composable
-fun AuthRoute(onAuthSuccess: () -> Unit, viewModel: AuthViewModel = viewModel()) {
+fun AuthRoute(onAuthSuccess: () -> Unit,
+              viewModel: AuthViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     AuthScreen(
         state = state,
@@ -143,7 +149,7 @@ fun AuthRoute(onAuthSuccess: () -> Unit, viewModel: AuthViewModel = viewModel())
         onPasswordChange = viewModel::onPasswordChange,
         onConfirmChange = viewModel::onConfirmChange,
         onToggleMode = viewModel::onToggleMode,
-        onSubmit = viewModel::onSubmit
+        onSubmit = { viewModel.onSubmit(onAuthSuccess) }
     )
 }
 
