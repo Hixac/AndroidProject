@@ -1,11 +1,12 @@
 package com.example.coflow.ui.auth
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -19,13 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coflow.R
-import com.example.coflow.ui.components.* // <-- Групповой импорт шаблонов
-import com.example.coflow.ui.theme.*      // <-- Групповой импорт темы
+import com.example.coflow.ui.components.*
+import com.example.coflow.ui.theme.*
 
 @Composable
 fun AuthScreen(
     state: AuthUiState,
-    onUsernameChange: (String) -> Unit,      // <-- НОВОЕ
+    onUsernameChange: (String) -> Unit,
     onContactChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmChange: (String) -> Unit,
@@ -33,152 +34,99 @@ fun AuthScreen(
     onSubmit: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(coFlowBackgroundBrush()),
+        modifier = Modifier.fillMaxSize().background(coFlowBackgroundBrush()),
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(
-                    horizontal = CoFlowSpacing.ScreenHorizontal,
-                    vertical = CoFlowSpacing.Medium // 16.dp
-                ),
+                .padding(horizontal = CoFlowSpacing.ScreenHorizontal, vertical = CoFlowSpacing.Medium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Стеклянная карточка авторизации
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = CoFlowShapes.Card,
-                color = CoFlowColors.CardBackground,
-                border = BorderStroke(1.dp, CoFlowColors.BlueBorder.copy(alpha = 0.75f)),
-                shadowElevation = 0.dp
-            ) {
-                Column(
-                    modifier = Modifier.padding(
-                        horizontal = CoFlowSpacing.Medium,
-                        vertical = CoFlowSpacing.Large // 24.dp
-                    ),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = stringResource(R.string.auth_welcome_title),
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = CoFlowColors.TextPrimary,
-                        textAlign = TextAlign.Center
+            CoFlowAuthCard(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = stringResource(R.string.auth_welcome_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = CoFlowColors.TextPrimary,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(CoFlowSpacing.Small))
+
+                Text(
+                    text = stringResource(if (state.mode == AuthMode.LOGIN) R.string.auth_subtitle_login else R.string.auth_subtitle_register),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = CoFlowColors.TextPrimary
+                )
+
+                Spacer(modifier = Modifier.height(CoFlowSpacing.Medium))
+
+                if (state.mode == AuthMode.REGISTER) {
+                    CoFlowAuthTextField(
+                        value = state.username,
+                        onValueChange = onUsernameChange,
+                        label = stringResource(R.string.auth_label_username),
+                        placeholder = stringResource(R.string.auth_placeholder_username),
+                        isError = state.usernameError != null,
+                        supportingText = state.usernameError?.let { { Text(it) } }
                     )
-
-                    Spacer(modifier = Modifier.height(CoFlowSpacing.Small))
-
-                    Text(
-                        text = stringResource(
-                            if (state.mode == AuthMode.LOGIN) R.string.auth_subtitle_login
-                            else R.string.auth_subtitle_register
-                        ),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = CoFlowColors.TextPrimary
-                    )
-
-                    Spacer(modifier = Modifier.height(CoFlowSpacing.Medium))
-
-                    // --- ПОЛЕ: ИМЯ ПОЛЬЗОВАТЕЛЯ (Только для регистрации) ---
-                    if (state.mode == AuthMode.REGISTER) {
-                        OutlinedTextField(
-                            value = state.username,
-                            onValueChange = onUsernameChange,
-                            modifier = Modifier.fillMaxWidth(),
-                            label = { Text(stringResource(R.string.auth_label_username))},
-                            placeholder = { Text(stringResource(R.string.auth_placeholder_username))},
-                            singleLine = true,
-                            isError = state.usernameError != null,
-                            supportingText = state.usernameError?.let { { Text(it) } },
-                            shape = CoFlowShapes.Input,
-                            colors = coFlowAuthFieldColors()
-                        )
-                        Spacer(modifier = Modifier.height(CoFlowSpacing.FieldGap)) // 4.dp
-                    }
-
-                    // --- ПОЛЕ: ПОЧТА / ТЕЛЕФОН ---
-                    OutlinedTextField(
-                        value = state.contact,
-                        onValueChange = onContactChange,
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text(stringResource(R.string.auth_label_contact)) },
-                        placeholder = { Text(stringResource(R.string.auth_placeholder_contact)) },
-                        singleLine = true,
-                        isError = state.contactError != null,
-                        supportingText = state.contactError?.let { { Text(it) } },
-                        shape = CoFlowShapes.Input,
-                        colors = coFlowAuthFieldColors()
-                    )
-
                     Spacer(modifier = Modifier.height(CoFlowSpacing.FieldGap))
+                }
 
-                    // --- ПОЛЕ: ПАРОЛЬ ---
-                    OutlinedTextField(
-                        value = state.password,
-                        onValueChange = onPasswordChange,
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text(stringResource(R.string.auth_label_password)) },
-                        placeholder = { Text(stringResource(R.string.auth_placeholder_password)) },
-                        singleLine = true,
+                CoFlowAuthTextField(
+                    value = state.contact,
+                    onValueChange = onContactChange,
+                    label = stringResource(R.string.auth_label_contact),
+                    placeholder = stringResource(R.string.auth_placeholder_contact),
+                    isError = state.contactError != null,
+                    supportingText = state.contactError?.let { { Text(it) } }
+                )
+
+                Spacer(modifier = Modifier.height(CoFlowSpacing.FieldGap))
+
+                CoFlowAuthTextField(
+                    value = state.password,
+                    onValueChange = onPasswordChange,
+                    label = stringResource(R.string.auth_label_password),
+                    placeholder = stringResource(R.string.auth_placeholder_password),
+                    visualTransformation = PasswordVisualTransformation(),
+                    isError = state.passwordError != null,
+                    supportingText = state.passwordError?.let { { Text(it) } }
+                )
+
+                if (state.mode == AuthMode.REGISTER) {
+                    Spacer(modifier = Modifier.height(CoFlowSpacing.FieldGap))
+                    CoFlowAuthTextField(
+                        value = state.confirmPassword,
+                        onValueChange = onConfirmChange,
+                        label = stringResource(R.string.auth_label_confirm_password),
+                        placeholder = stringResource(R.string.auth_placeholder_confirm_password),
                         visualTransformation = PasswordVisualTransformation(),
-                        isError = state.passwordError != null,
-                        supportingText = state.passwordError?.let { { Text(it) } },
-                        shape = CoFlowShapes.Input,
-                        colors = coFlowAuthFieldColors()
+                        isError = state.confirmError != null,
+                        supportingText = state.confirmError?.let { { Text(stringResource(R.string.auth_error_not_equal_password)) } }
                     )
+                }
 
-                    // --- ПОЛЕ: ПОДТВЕРЖДЕНИЕ ПАРОЛЯ (Только для регистрации) ---
-                    if (state.mode == AuthMode.REGISTER) {
-                        Spacer(modifier = Modifier.height(CoFlowSpacing.FieldGap))
-                        OutlinedTextField(
-                            value = state.confirmPassword,
-                            onValueChange = onConfirmChange,
-                            modifier = Modifier.fillMaxWidth(),
-                            label = { Text(stringResource(R.string.auth_label_confirm_password)) },
-                            placeholder = { Text(stringResource(R.string.auth_placeholder_confirm_password)) },
-                            singleLine = true,
-                            visualTransformation = PasswordVisualTransformation(),
-                            isError = state.confirmError != null,
-                            supportingText = state.confirmError?.let { { Text(stringResource((R.string.auth_error_not_equal_password))) } },
-                            shape = CoFlowShapes.Input,
-                            colors = coFlowAuthFieldColors()
-                        )
-                    }
+                Spacer(modifier = Modifier.height(CoFlowSpacing.Medium))
 
-                    Spacer(modifier = Modifier.height(CoFlowSpacing.Medium))
+                CoFlowPrimaryButton(
+                    text = stringResource(if (state.mode == AuthMode.LOGIN) R.string.auth_button_login else R.string.auth_button_register),
+                    onClick = onSubmit,
+                    enabled = !state.isSubmitting,
+                    height = 48.dp
+                )
 
-                    // --- КНОПКА: ИСПОЛЬЗУЕМ ШАБЛОН CoFlowPrimaryButton ---
-                    CoFlowPrimaryButton(
-                        text = stringResource(
-                            if (state.mode == AuthMode.LOGIN) R.string.auth_button_login
-                            else R.string.auth_button_register
-                        ),
-                        onClick = onSubmit,
-                        modifier = Modifier.fillMaxWidth(),
-                        // Переопределяем высоту, если нужно, или оставляем дефолтную (52.dp)
-                        // height = 48.dp, 
-                        enabled = !state.isSubmitting
+                Spacer(modifier = Modifier.height(CoFlowSpacing.Small))
+
+                TextButton(onClick = onToggleMode) {
+                    Text(
+                        text = stringResource(if (state.mode == AuthMode.LOGIN) R.string.auth_toggle_to_register else R.string.auth_toggle_to_login),
+                        color = CoFlowColors.TextPrimary,
+                        style = MaterialTheme.typography.labelLarge
                     )
-
-                    Spacer(modifier = Modifier.height(CoFlowSpacing.Small))
-
-                    // --- ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМА ---
-                    TextButton(onClick = onToggleMode) {
-                        Text(
-                            text = stringResource(
-                                if (state.mode == AuthMode.LOGIN) R.string.auth_toggle_to_register
-                                else R.string.auth_toggle_to_login
-                            ),
-                            color = CoFlowColors.TextPrimary,
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                    }
                 }
             }
         }
@@ -186,15 +134,11 @@ fun AuthScreen(
 }
 
 @Composable
-fun AuthRoute(
-    onAuthSuccess: () -> Unit,
-    viewModel: AuthViewModel = viewModel(),
-) {
+fun AuthRoute(onAuthSuccess: () -> Unit, viewModel: AuthViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
     AuthScreen(
         state = state,
-        onUsernameChange = viewModel::onUsernameChange,      // <-- НОВОЕ
+        onUsernameChange = viewModel::onUsernameChange,
         onContactChange = viewModel::onContactChange,
         onPasswordChange = viewModel::onPasswordChange,
         onConfirmChange = viewModel::onConfirmChange,
@@ -204,9 +148,10 @@ fun AuthRoute(
 }
 
 // ============================================================================
-// ПРЕВЬЮ (Previews)
+// ПРЕВЬЮ (Все 4 варианта)
 // ============================================================================
 
+// 1. Пустая форма авторизации
 @Preview(showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 private fun AuthLoginPreview() {
@@ -223,6 +168,7 @@ private fun AuthLoginPreview() {
     }
 }
 
+// 2. Форма авторизации с ошибками валидации
 @Preview(showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 private fun AuthLoginErrorPreview() {
@@ -244,6 +190,7 @@ private fun AuthLoginErrorPreview() {
     }
 }
 
+// 3. Пустая форма регистрации
 @Preview(showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 private fun AuthRegisterPreview() {
@@ -251,7 +198,7 @@ private fun AuthRegisterPreview() {
         AuthScreen(
             state = AuthUiState(
                 mode = AuthMode.REGISTER,
-                username = "Лиза" // <-- НОВОЕ
+                username = "Лиза"
             ),
             onUsernameChange = {},
             onContactChange = {},
@@ -263,6 +210,7 @@ private fun AuthRegisterPreview() {
     }
 }
 
+// 4. Форма регистрации с ошибкой несовпадения паролей
 @Preview(showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 private fun AuthRegisterMismatchPreview() {
@@ -270,7 +218,7 @@ private fun AuthRegisterMismatchPreview() {
         AuthScreen(
             state = AuthUiState(
                 mode = AuthMode.REGISTER,
-                username = "Лиза",                     // <-- НОВОЕ
+                username = "Лиза",
                 contact = "liza@mail.ru",
                 password = "parol123",
                 confirmPassword = "parol124",

@@ -28,10 +28,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
-fun ChoseDateScreen(
-    onBackClick: () -> Unit,
-    onConfirmSelection: (String) -> Unit
-) {
+fun ChoseDateScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Unit) {
     var currentMonth by rememberSaveable { mutableStateOf(YearMonth.of(2027, 1)) }
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.of(2027, 1, 7)) }
     val focusManager = LocalFocusManager.current
@@ -40,16 +37,11 @@ fun ChoseDateScreen(
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
         Column(modifier = Modifier.fillMaxSize().safeDrawingPadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
-            Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 22.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier.size(48.dp).clip(CircleShape).clickable { focusManager.clearFocus(); onBackClick() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    CoFlowIcon(name = "back", modifier = Modifier.size(22.dp), color = CoFlowColors.TextSecondary, contentDescription = "Назад")
-                }
-                Spacer(Modifier.width(4.dp))
-                Text(text = "Дата окончания", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = CoFlowColors.TextPrimary)
-            }
+
+            CoFlowScreenHeader(
+                title = "Дата окончания",
+                onBackClick = { focusManager.clearFocus(); onBackClick() }
+            )
 
             Box(
                 modifier = Modifier.fillMaxWidth()
@@ -94,8 +86,7 @@ fun ChoseDateScreen(
                 onClick = {
                     focusManager.clearFocus()
                     onConfirmSelection(selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
-                },
-                modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)
+                }
             )
         }
     }
@@ -146,7 +137,5 @@ private fun CalendarGrid(currentMonth: YearMonth, selectedDate: LocalDate, onDat
 @Preview(name = "Дата окончания", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 private fun ChoseDateScreenPreview() {
-    CoFlowTheme {
-        ChoseDateScreen(onBackClick = {}, onConfirmSelection = {})
-    }
+    CoFlowTheme { ChoseDateScreen(onBackClick = {}, onConfirmSelection = {}) }
 }

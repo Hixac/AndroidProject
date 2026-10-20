@@ -5,51 +5,46 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.coflow.ui.theme.CoFlowColors
 import com.example.coflow.ui.theme.CoFlowGlassStyles
 import com.example.coflow.ui.theme.CoFlowShapes
+import com.example.coflow.ui.theme.coFlowAuthFieldColors
 
 @Composable
 fun CoFlowGlassTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    label: String? = null, // Если null, рендерится как поисковая строка
+    label: String? = null,
     placeholder: String = "",
     leadingIcon: String? = null,
-    showTrailingArrow: Boolean = false,
-    onClick: (() -> Unit)? = null, // Для полей-селекторов (дата, проект)
+    trailingIcon: String? = null,
+    isSelector: Boolean = false,
     singleLine: Boolean = true,
     maxLength: Int? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(
-        capitalization = KeyboardCapitalization.Sentences,
-        imeAction = if (singleLine) ImeAction.Next else ImeAction.Default
-    ),
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
-    val shape = CoFlowShapes.Input
-    val focusManager = LocalFocusManager.current
+    val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
 
     Column(modifier = modifier.fillMaxWidth()) {
         if (label != null) {
@@ -64,14 +59,11 @@ fun CoFlowGlassTextField(
 
         val fieldModifier = Modifier
             .fillMaxWidth()
-            .shadow(elevation = 3.dp, shape = shape, ambientColor = CoFlowGlassStyles.Shadow, spotColor = CoFlowGlassStyles.Shadow)
-            .clip(shape)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(Color.White.copy(alpha = 0.72f), Color(0xFFF5F8FF).copy(alpha = 0.58f))
-                )
-            )
-            .border(width = 1.dp, color = CoFlowGlassStyles.BlueBorder, shape = shape)
+            .shadow(elevation = 3.dp, shape = CoFlowShapes.Input, ambientColor = CoFlowGlassStyles.Shadow, spotColor = CoFlowGlassStyles.Shadow)
+            .clip(CoFlowShapes.Input)
+            .background(brush = Brush.verticalGradient(colors = listOf(Color.White.copy(alpha = 0.72f), Color(0xFFF5F8FF).copy(alpha = 0.58f))))
+            .border(width = 1.dp, color = CoFlowGlassStyles.BlueBorder, shape = CoFlowShapes.Input)
+            .then(if (isSelector) Modifier.clickable { focusManager.clearFocus() } else Modifier)
 
         BasicTextField(
             value = value,
@@ -80,61 +72,79 @@ fun CoFlowGlassTextField(
             textStyle = TextStyle(color = CoFlowColors.TextPrimary, fontSize = 14.sp, lineHeight = 20.sp),
             cursorBrush = SolidColor(CoFlowColors.Blue),
             singleLine = singleLine,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = if (!singleLine && keyboardOptions.imeAction == ImeAction.Next) {
-                KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) })
-            } else {
-                keyboardActions
-            },
+            visualTransformation = visualTransformation,
+            keyboardOptions = if (isSelector) KeyboardOptions.Default else keyboardOptions,
+            keyboardActions = if (isSelector) KeyboardActions.Default else keyboardActions,
             decorationBox = { innerTextField ->
-                if (!singleLine) {
-                    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp)) {
-                        Box(modifier = Modifier.fillMaxWidth().heightIn(min = 88.dp), contentAlignment = Alignment.TopStart) {
-                            if (value.isEmpty()) Text(text = placeholder, color = CoFlowColors.TextSecondary, fontSize = 14.sp, lineHeight = 20.sp)
-                            innerTextField()
-                        }
-                        if (maxLength != null) {
-                            Text(
-                                text = "${value.length}/$maxLength",
-                                modifier = Modifier.align(Alignment.End).padding(top = 6.dp),
-                                fontSize = 11.sp, color = CoFlowColors.TextSecondary
-                            )
-                        }
-                    }
-                } else {
+                // ИСПРАВЛЕНИЕ 1: Оборачиваем Row и Text счетчика в Column, чтобы они могли существовать вместе
+                Column(modifier = Modifier.fillMaxWidth()) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 52.dp)
-                            .padding(horizontal = 14.dp, vertical = 10.dp)
-                            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.fillMaxWidth().heightIn(min = if (singleLine) 52.dp else 88.dp).padding(horizontal = 14.dp, vertical = if (singleLine) 10.dp else 12.dp),
+                        verticalAlignment = if (singleLine) Alignment.CenterVertically else Alignment.Top
                     ) {
                         if (leadingIcon != null) {
                             CoFlowIcon(name = leadingIcon, modifier = Modifier.size(21.dp), color = CoFlowColors.TextPrimary)
                             Spacer(Modifier.width(10.dp))
                         }
 
-                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-                            if (value.isEmpty()) Text(text = placeholder, color = CoFlowColors.TextSecondary, fontSize = 14.sp)
+                        Box(modifier = Modifier.weight(1f), contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart) {
+                            if (value.isEmpty()) {
+                                Text(text = placeholder, color = CoFlowColors.TextSecondary, fontSize = 14.sp)
+                            }
                             innerTextField()
                         }
 
-                        if (showTrailingArrow) {
+                        if (trailingIcon != null) {
                             Spacer(Modifier.width(8.dp))
                             Box(
-                                modifier = Modifier
-                                    .size(26.dp)
-                                    .background(Color.White.copy(alpha = 0.65f), CircleShape)
-                                    .border(1.dp, CoFlowGlassStyles.BlueBorder, CircleShape),
+                                modifier = Modifier.size(26.dp).background(Color.White.copy(alpha = 0.65f), CircleShape).border(1.dp, CoFlowGlassStyles.BlueBorder, CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
-                                CoFlowIcon(name = "chevron", modifier = Modifier.size(14.dp), color = CoFlowColors.Blue)
+                                CoFlowIcon(name = trailingIcon, modifier = Modifier.size(14.dp), color = CoFlowColors.Blue)
                             }
                         }
+                    }
+
+                    // ИСПРАВЛЕНИЕ 2: Используем Alignment.End (который является Alignment.Horizontal) вместо Alignment.BottomEnd
+                    if (!singleLine && maxLength != null) {
+                        Text(
+                            text = "${value.length}/$maxLength",
+                            modifier = Modifier
+                                .align(Alignment.End) // <-- Здесь была ошибка. Alignment.End - это правильный тип для Column
+                                .padding(top = 6.dp, end = 14.dp),
+                            fontSize = 11.sp,
+                            color = CoFlowColors.TextSecondary
+                        )
                     }
                 }
             }
         )
     }
+}
+
+@Composable
+fun CoFlowAuthTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    placeholder: String,
+    modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    singleLine: Boolean = true
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier.fillMaxWidth(),
+        label = { Text(label) },
+        placeholder = { Text(placeholder) },
+        singleLine = singleLine,
+        visualTransformation = visualTransformation,
+        isError = isError,
+        supportingText = supportingText,
+        shape = CoFlowShapes.Input,
+        colors = coFlowAuthFieldColors()
+    )
 }

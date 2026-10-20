@@ -3,7 +3,6 @@ package com.example.coflow.ui.tasks
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,63 +23,44 @@ import androidx.compose.ui.unit.sp
 import com.example.coflow.ui.components.*
 import com.example.coflow.ui.theme.*
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.clickable
 
-data class Assignee(
-    val id: String,
-    val name: String,
-    val email: String,
-    val initials: String,
-    val avatarColor: Color
-)
+data class Assignee(val id: String, val name: String, val email: String, val initials: String, val avatarColor: Color)
 
 @Composable
-fun ChoseAssigneeScreen(
-    onBackClick: () -> Unit,
-    onConfirmSelection: (List<Assignee>) -> Unit
-) {
+fun ChoseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assignee>) -> Unit) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val allAssignees = remember {
         listOf(
             Assignee("1", "Анна Смирнова", "anna.s@example.com", "АС", Color(0xFF6B9AF3)),
             Assignee("2", "Михаил Орлов", "m.orlov@example.com", "МО", Color(0xFFA3B8CC)),
-            Assignee("3", "Елена Волкова", "elena.v@example.com", "ЕВ", Color(0xFF86D3B5)),
-            Assignee("4", "Дмитрий Соколов", "d.sokolov@example.com", "ДС", Color(0xFF8BB8F8)),
-            Assignee("5", "Мария Козлова", "maria.k@example.com", "МК", Color(0xFFAFA3F8))
+            Assignee("3", "Елена Волкова", "elena.v@example.com", "ЕВ", Color(0xFF86D3B5))
         )
     }
     var selectedIds by remember { mutableStateOf(setOf("1")) }
-    val filteredAssignees = allAssignees.filter {
-        it.name.contains(searchQuery, ignoreCase = true) || it.email.contains(searchQuery, ignoreCase = true)
-    }
+    val filteredAssignees = allAssignees.filter { it.name.contains(searchQuery, ignoreCase = true) || it.email.contains(searchQuery, ignoreCase = true) }
     val focusManager = LocalFocusManager.current
 
     fun getSelectedText(count: Int): String {
         if (count == 0) return "Никто не выбран"
-        val lastDigit = count % 10
-        val lastTwoDigits = count % 100
-        val word = if (lastTwoDigits in 11..19) "исполнителей"
-        else if (lastDigit == 1) "исполнитель"
-        else if (lastDigit in 2..4) "исполнителя"
-        else "исполнителей"
+        val word = when {
+            count % 100 in 11..19 -> "исполнителей"
+            count % 10 == 1 -> "исполнитель"
+            count % 10 in 2..4 -> "исполнителя"
+            else -> "исполнителей"
+        }
         return "Выбран $count $word"
     }
 
     BackHandler(onBack = onBackClick)
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
-        Column(
-            modifier = Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)
-        ) {
-            Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 22.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier.size(48.dp).clip(CircleShape).clickable { focusManager.clearFocus(); onBackClick() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    CoFlowIcon(name = "back", modifier = Modifier.size(22.dp), color = CoFlowColors.TextSecondary, contentDescription = "Назад")
-                }
-                Spacer(Modifier.width(4.dp))
-                Text(text = "Добавить исполнителя", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = CoFlowColors.TextPrimary)
-            }
+        Column(modifier = Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
+
+            CoFlowScreenHeader(
+                title = "Добавить исполнителя",
+                onBackClick = { focusManager.clearFocus(); onBackClick() }
+            )
 
             CoFlowGlassTextField(
                 value = searchQuery,
@@ -151,7 +131,5 @@ fun ChoseAssigneeScreen(
 @Preview(name = "Выбор исполнителя", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 private fun ChoseAssigneeScreenPreview() {
-    CoFlowTheme {
-        ChoseAssigneeScreen(onBackClick = {}, onConfirmSelection = {})
-    }
+    CoFlowTheme { ChoseAssigneeScreen(onBackClick = {}, onConfirmSelection = {}) }
 }

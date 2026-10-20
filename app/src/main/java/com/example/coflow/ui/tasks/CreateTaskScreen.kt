@@ -2,26 +2,22 @@ package com.example.coflow.ui.tasks
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.coflow.ui.components.*
 import com.example.coflow.ui.theme.*
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.clickable
 
 data class CreateTaskFormData(
     val title: String, val description: String, val assignees: String,
@@ -49,16 +45,11 @@ fun CreateTaskScreen(
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
-            Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 22.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier.size(48.dp).clip(CircleShape).clickable { focusManager.clearFocus(); onBackClick() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    CoFlowIcon(name = "back", modifier = Modifier.size(22.dp), color = CoFlowColors.TextSecondary, contentDescription = "Назад")
-                }
-                Spacer(Modifier.width(4.dp))
-                Text(text = "Создание задачи", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = CoFlowColors.TextPrimary)
-            }
+
+            CoFlowScreenHeader(
+                title = "Создание задачи",
+                onBackClick = { focusManager.clearFocus(); onBackClick() }
+            )
 
             Column(modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 CoFlowGlassTextField(
@@ -69,17 +60,22 @@ fun CreateTaskScreen(
                     label = "Описание", value = description, onValueChange = { description = it.take(250) },
                     placeholder = "Введите описание задачи", singleLine = false, maxLength = 250
                 )
+                // Поля-селекторы: isSelector = true отключает клавиатуру, modifier.clickable обрабатывает навигацию
                 CoFlowGlassTextField(
                     label = "Исполнители", value = assignees, onValueChange = { assignees = it },
-                    placeholder = "Выберите исполнителей", leadingIcon = "person", showTrailingArrow = true, onClick = onNavigateToAssignees
+                    placeholder = "Выберите исполнителей", leadingIcon = "person", trailingIcon = "chevron",
+                    isSelector = true, modifier = Modifier.clickable { onNavigateToAssignees() }
                 )
                 CoFlowGlassTextField(
                     label = "Проект", value = project, onValueChange = { project = it },
-                    placeholder = "Выберите проект", leadingIcon = "folder", showTrailingArrow = true, onClick = onNavigateToProject
+                    placeholder = "Выберите проект", leadingIcon = "folder", trailingIcon = "chevron",
+                    isSelector = true, modifier = Modifier.clickable { onNavigateToProject() }
                 )
                 CoFlowGlassTextField(
                     label = "Дата окончания", value = dueDate, onValueChange = { dueDate = it },
-                    placeholder = "Выберите дату", leadingIcon = "calendar", showTrailingArrow = true, onClick = onNavigateToDate,
+                    placeholder = "Выберите дату", leadingIcon = "calendar", trailingIcon = "chevron",
+                    isSelector = true,
+                    modifier = Modifier.clickable { onNavigateToDate() },
                     keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                     keyboardActions = androidx.compose.foundation.text.KeyboardActions(onDone = { focusManager.clearFocus() })
                 )
@@ -92,8 +88,7 @@ fun CreateTaskScreen(
                     focusManager.clearFocus()
                     onCreateTask(CreateTaskFormData(title.trim(), description.trim(), assignees.trim(), project.trim(), dueDate.trim()))
                 },
-                enabled = canCreate,
-                modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)
+                enabled = canCreate
             )
         }
     }
