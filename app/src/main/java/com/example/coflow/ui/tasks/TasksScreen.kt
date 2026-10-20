@@ -43,7 +43,10 @@ private data class TaskGroup(val id: String, val title: String, val tasks: List<
 @Composable
 fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
     var grouping by remember { mutableStateOf(TaskGrouping.STATUS) }
-    var selectedFilter by remember { mutableStateOf("Без фильтра") }
+
+    // ИЗМЕНЕНИЕ 1: Используем Set<String> для множественного выбора
+    var selectedFilters by remember { mutableStateOf(setOf<String>()) }
+
     var collapsedGroups by remember { mutableStateOf(setOf("IN_PROGRESS")) }
     var dialogTitle by remember { mutableStateOf<String?>(null) }
     var dialogMessage by remember { mutableStateOf("") }
@@ -60,11 +63,19 @@ fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
     }
 
     val today = LocalDate.now()
+
+    // ИЗМЕНЕНИЕ 2: Логика фильтрации для множественного выбора (условие ИЛИ)
     val filteredTasks = TasksTestData.tasks.filter { task ->
-        when (selectedFilter) {
-            "Мои" -> task.isMine
-            "Проект 1", "Проект 2", "Проект 3" -> task.projectName == selectedFilter
-            else -> true
+        if (selectedFilters.isEmpty()) {
+            true // Если фильтры не выбраны, показываем все
+        } else {
+            val isMineSelected = selectedFilters.contains("Мои")
+            val projectFilters = selectedFilters.filter { it.startsWith("Проект") }
+
+            val matchesMine = isMineSelected && task.isMine
+            val matchesProject = projectFilters.any { task.projectName == it }
+
+            matchesMine || matchesProject
         }
     }
 
@@ -83,6 +94,13 @@ fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
 
     val completedCount = filteredTasks.count { it.status == TaskStatus.DONE }
     val activeCount = filteredTasks.size - completedCount
+
+    // ИЗМЕНЕНИЕ 3: Динамический текст для кнопки фильтра
+    val filterButtonText = when {
+        selectedFilters.isEmpty() -> "Без фильтра"
+        selectedFilters.size == 1 -> selectedFilters.first()
+        else -> "Выбрано: ${selectedFilters.size}"
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
         Column(modifier = Modifier.fillMaxSize().padding(top = 38.dp, start = CoFlowSpacing.ScreenHorizontal, end = CoFlowSpacing.ScreenHorizontal)) {
@@ -126,8 +144,24 @@ fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
                             modifier = Modifier.weight(1f),
                             grouping = grouping,
                             onGroupingChange = { newGrouping -> grouping = newGrouping; collapsedGroups = emptySet() },
-                            selectedFilter = selectedFilter,
-                            onFilterChange = { selectedFilter = it }
+                            selectedFilters = selectedFilters,
+                            filterButtonText = filterButtonText,
+                            onFilterToggle = { option ->
+                                // ИЗМЕНЕНИЕ 4: Логика переключения фильтров
+                                if (option == "Без фильтра") {
+                                    selectedFilters = emptySet()
+                                } else {
+                                    val newSet = selectedFilters.toMutableSet()
+                                    if (newSet.contains("Без фильтра")) newSet.remove("Без фильтра")
+
+                                    if (newSet.contains(option)) {
+                                        newSet.remove(option)
+                                    } else {
+                                        newSet.add(option)
+                                    }
+                                    selectedFilters = newSet.toSet()
+                                }
+                            }
                         )
                         Spacer(Modifier.width(16.dp))
                         Box(
@@ -212,9 +246,18 @@ private fun TaskRow(task: Task) {
     }
 }
 
+// ИЗМЕНЕНИЕ 5: Обновленные параметры для поддержки множественного выбора
 @Composable
-private fun SortFilterPanel(modifier: Modifier = Modifier, grouping: TaskGrouping, onGroupingChange: (TaskGrouping) -> Unit, selectedFilter: String, onFilterChange: (String) -> Unit) {
+private fun SortFilterPanel(
+    modifier: Modifier = Modifier,
+    grouping: TaskGrouping,
+    onGroupingChange: (TaskGrouping) -> Unit,
+    selectedFilters: Set<String>,
+    filterButtonText: String,
+    onFilterToggle: (String) -> Unit
+) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(7.dp), verticalAlignment = Alignment.CenterVertically) {
+        // --- Группировка (остается одиночным выбором) ---
         Box(modifier = Modifier.weight(1f)) {
             var expanded by remember { mutableStateOf(false) }
             GlassControlSurface(modifier = Modifier.fillMaxWidth().clickable { expanded = true }) {
@@ -233,6 +276,8 @@ private fun SortFilterPanel(modifier: Modifier = Modifier, grouping: TaskGroupin
                 GlassGroupingOption(title = "По сроку", selected = grouping == TaskGrouping.DEADLINE) { onGroupingChange(TaskGrouping.DEADLINE); expanded = false }
             }
         }
+
+        // --- Фильтр (теперь множественный выбор) ---
         Box(modifier = Modifier.weight(1f)) {
             var expanded by remember { mutableStateOf(false) }
             GlassControlSurface(modifier = Modifier.fillMaxWidth().clickable { expanded = true }) {
@@ -240,15 +285,26 @@ private fun SortFilterPanel(modifier: Modifier = Modifier, grouping: TaskGroupin
                     Text(text = "Фильтр", fontSize = 9.sp, color = CoFlowColors.TextSecondary)
                     Spacer(Modifier.height(3.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = selectedFilter, fontSize = 11.sp, color = CoFlowColors.TextPrimary, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+                        Text(text = filterButtonText, fontSize = 11.sp, color = CoFlowColors.TextPrimary, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
                         Spacer(Modifier.width(3.dp))
                         Text("⌄", fontSize = 11.sp, color = CoFlowColors.Blue)
                     }
                 }
             }
+            // ИЗМЕНЕНИЕ 6: Меню НЕ закрывается при клике на элемент, чтобы можно было выбрать несколько
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }, shape = RoundedCornerShape(16.dp), containerColor = Color(0xFFF4F8FF).copy(alpha = 0.62f), tonalElevation = 0.dp, shadowElevation = 0.dp, border = BorderStroke(1.dp, Color.White.copy(alpha = 0.82f))) {
-                listOf("Без фильтра", "Мои", "Проект 1", "Проект 2", "Проект 3").forEach { option ->
-                    GlassFilterOption(title = option, selected = selectedFilter == option) { onFilterChange(option); expanded = false }
+                val options = listOf("Без фильтра", "Мои", "Проект 1", "Проект 2", "Проект 3")
+                options.forEach { option ->
+                    GlassFilterOption(
+                        title = option,
+                        selected = selectedFilters.contains(option),
+                        onClick = {
+                            onFilterToggle(option)
+                            // Обратите внимание: мы НЕ делаем expanded = false здесь,
+                            // чтобы пользователь мог выбрать несколько пунктов подряд.
+                            // Меню закроется, когда пользователь нажмет вне его области.
+                        }
+                    )
                 }
             }
         }
