@@ -1,4 +1,4 @@
-package com.example.coflow.data
+package com.example.coflow.models
 
 import com.example.coflow.models.UserModel
 import java.time.LocalDateTime
