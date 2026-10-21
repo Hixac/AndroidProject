@@ -26,12 +26,29 @@
         <string name="auth_label_confirm_password">Confirm password</string>
         <string name="auth_placeholder_confirm_password">Enter password again</string>
 
+        <string name="creation_task_name_label">Name</string>
+        <string name="creation_task_name_placeholder">Enter task name</string>
+
+        <string name="creation_task_description_label">Description</string>
+        <string name="creation_task_description_placeholder">Enter task description</string>
+
+        <string name="creation_task_assignee_label">Assignee</string>
+        <string name="creation_task_assignee_placeholder">Choose assignee</string>
+
+        <string name="creation_task_project_label">Project</string>
+        <string name="creation_task_project_placeholder">Choose project</string>
+
+        <string name="creation_task_deadline_label">Deadline</string>
+        <string name="creation_task_deadline_placeholder">Choose date</string>
+
         <!-- Кнопки -->
         <string name="auth_button_login">Log in</string>
         <string name="auth_button_register">Sign up</string>
 
         <string name="auth_toggle_to_register">Don\'t have an account? Sign up</string>
         <string name="auth_toggle_to_login">Already have an account? Log in</string>
+
+        <string name="create_task_button">Create task</string>
 
         <!-- Ошибки -->
         <string name="auth_error_invalid_contact">Check email or phone format</string>

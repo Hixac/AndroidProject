@@ -22,14 +22,32 @@
     <string name="auth_label_password">Пароль</string>
     <string name="auth_placeholder_password">Не менее 8 символов</string>
 
-    <string name="auth_label_confirm_password">Повторите пароль</string>
+    <string name="auth_label_confirm_password">Подтвердите пароль</string>
     <string name="auth_placeholder_confirm_password">Введите пароль ещё раз</string>
+
+    <string name="creation_task_name_label">Название</string>
+    <string name="creation_task_name_placeholder">Введите название задачи</string>
+
+    <string name="creation_task_description_label">Описание</string>
+    <string name="creation_task_description_placeholder">Введите описание задачи</string>
+
+    <string name="creation_task_assignee_label">Исполнители</string>
+    <string name="creation_task_assignee_placeholder">Выберите исполнителей</string>
+
+    <string name="creation_task_project_label">Проект</string>
+    <string name="creation_task_project_placeholder">Выберите проект</string>
+
+    <string name="creation_task_deadline_label">Дата окончания</string>
+    <string name="creation_task_deadline_placeholder">Выберите дату</string>
 
     <!-- Кнопки -->
     <string name="auth_button_login">Войти</string>
     <string name="auth_button_register">Зарегистрироваться</string>
+
     <string name="auth_toggle_to_register">Ещё нет аккаунта? Зарегистрироваться</string>
     <string name="auth_toggle_to_login">Уже существует аккаунт? Войти</string>
+
+    <string name="create_task_button">Создать задачу</string>
 
     <!-- Ошибки -->
     <string name="auth_error_invalid_contact">Проверьте формат почты или телефона</string>
