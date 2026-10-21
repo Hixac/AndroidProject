@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import com.example.coflow.R
 
 @Composable
 fun ChooseDateScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Unit) {
@@ -39,7 +41,7 @@ fun ChooseDateScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Un
         Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
 
             CoFlowScreenHeader(
-                title = "Дата окончания",
+                title = stringResource(R.string.choose_date_header),
                 onBackClick = { focusManager.clearFocus(); onBackClick() }
             )
 
@@ -82,7 +84,7 @@ fun ChooseDateScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Un
             Spacer(Modifier.weight(1f))
 
             CoFlowPrimaryButton(
-                text = "Готово",
+                text = stringResource(R.string.done_button),
                 onClick = {
                     focusManager.clearFocus()
                     onConfirmSelection(selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
