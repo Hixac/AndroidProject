@@ -1,8 +1,8 @@
 
 package com.example.coflow.data
 
-import java.time.LocalDate
 import com.example.coflow.models.TaskStatus
+import java.time.LocalDate
 
 // Модель одной задачи.
 data class Task(
