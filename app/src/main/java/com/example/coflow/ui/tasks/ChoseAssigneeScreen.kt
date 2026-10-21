@@ -34,7 +34,9 @@ fun ChoseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assig
         listOf(
             Assignee("1", "Анна Смирнова", "anna.s@example.com", "АС", Color(0xFF6B9AF3)),
             Assignee("2", "Михаил Орлов", "m.orlov@example.com", "МО", Color(0xFFA3B8CC)),
-            Assignee("3", "Елена Волкова", "elena.v@example.com", "ЕВ", Color(0xFF86D3B5))
+            Assignee("3", "Елена Волкова", "elena.v@example.com", "ЕВ", Color(0xFF86D3B5)),
+            Assignee("4", "Дмитрий Соколов", "d.sokolov@example.com", "ДС", Color(0xFF8BB8F8)),
+            Assignee("5", "Мария Козлова", "maria.k@example.com", "МК", Color(0xFFAFA3F8))
         )
     }
     var selectedIds by remember { mutableStateOf(setOf("1")) }
@@ -55,7 +57,7 @@ fun ChoseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assig
     BackHandler(onBack = onBackClick)
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
-        Column(modifier = Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
+        Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
 
             CoFlowScreenHeader(
                 title = "Добавить исполнителя",
@@ -81,7 +83,10 @@ fun ChoseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assig
             LazyColumn(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
                 items(filteredAssignees, key = { it.id }) { assignee ->
                     val isSelected = selectedIds.contains(assignee.id)
+
+                    // ИСПРАВЛЕНО: передаем isSelected в карточку
                     CoFlowGlassCard(
+                        isSelected = isSelected,
                         modifier = Modifier.clickable {
                             selectedIds = if (isSelected) selectedIds - assignee.id else selectedIds + assignee.id
                         }

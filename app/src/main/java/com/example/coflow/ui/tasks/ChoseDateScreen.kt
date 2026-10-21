@@ -36,7 +36,7 @@ fun ChoseDateScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Uni
     BackHandler(onBack = onBackClick)
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
-        Column(modifier = Modifier.fillMaxSize().safeDrawingPadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
+        Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
 
             CoFlowScreenHeader(
                 title = "Дата окончания",
