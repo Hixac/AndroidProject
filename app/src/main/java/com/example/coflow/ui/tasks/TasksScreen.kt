@@ -89,28 +89,31 @@ fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
     }
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
-        Column(modifier = Modifier.fillMaxSize().padding(top = 38.dp, start = CoFlowSpacing.ScreenHorizontal, end = CoFlowSpacing.ScreenHorizontal)) {
+        Column(modifier = Modifier.fillMaxSize().padding(top = 30.dp, start = CoFlowSpacing.ScreenHorizontal, end = CoFlowSpacing.ScreenHorizontal)) {
 
-            // Хедер задач
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                Column {
-                    Text(text = "Мои задачи", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = CoFlowColors.TextPrimary)
-                    Spacer(Modifier.height(3.dp))
-                    Text(text = "$activeCount активных · $completedCount завершены", fontSize = 13.sp, color = CoFlowColors.TextSecondary)
+            // ИСПРАВЛЕНО: Единый, чистый заголовок без стрелки назад, но с подзаголовком и колокольчиком
+            CoFlowScreenHeader(
+                title = "Мои задачи",
+                subtitle = "$activeCount активных · $completedCount завершены",
+                trailingContent = {
+                    Box {
+                        CoFlowGlassIconButton(
+                            iconName = "bell",
+                            onClick = {
+                                dialogTitle = "Уведомления"
+                                dialogMessage = "Интерфейс уведомлений ещё не реализован."
+                            }
+                        )
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(top = 3.dp, end = 3.dp)
+                                .size(6.dp)
+                                .background(CoFlowColors.Blue, CircleShape)
+                        )
+                    }
                 }
-                Box {
-                    // ИСПРАВЛЕНИЕ: Явно указываем имя параметра onClick, чтобы компилятор не пытался
-                    // передать лямбду в последний параметр (containerSize: Dp)
-                    CoFlowGlassIconButton(
-                        iconName = "bell",
-                        onClick = {
-                            dialogTitle = "Уведомления"
-                            dialogMessage = "Интерфейс уведомлений ещё не реализован."
-                        }
-                    )
-                    Box(modifier = Modifier.align(Alignment.TopEnd).padding(top = 3.dp, end = 3.dp).size(6.dp).background(CoFlowColors.Blue, CircleShape))
-                }
-            }
+            )
 
             Spacer(Modifier.height(16.dp))
 
@@ -149,12 +152,10 @@ fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
                         )
                         Spacer(Modifier.width(16.dp))
 
-                        // Шаблон FAB кнопки
                         CoFlowFabButton(onClick = onNavigateToCreateTask)
                     }
                     Spacer(Modifier.height(7.dp))
 
-                    // Шаблон нижней навигации
                     CoFlowBottomNavigationBar(
                         items = listOf(
                             NavItem(icon = "tasks", title = "Мои задачи", selected = true, onClick = {}),
