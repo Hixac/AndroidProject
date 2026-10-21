@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
-fun ChoseDateScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Unit) {
+fun ChooseDateScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Unit) {
     var currentMonth by rememberSaveable { mutableStateOf(YearMonth.of(2027, 1)) }
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.of(2027, 1, 7)) }
     val focusManager = LocalFocusManager.current
@@ -136,6 +136,6 @@ private fun CalendarGrid(currentMonth: YearMonth, selectedDate: LocalDate, onDat
 
 @Preview(name = "Дата окончания", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
-private fun ChoseDateScreenPreview() {
-    CoFlowTheme { ChoseDateScreen(onBackClick = {}, onConfirmSelection = {}) }
+private fun ChooseDateScreenPreview() {
+    CoFlowTheme { ChooseDateScreen(onBackClick = {}, onConfirmSelection = {}) }
 }

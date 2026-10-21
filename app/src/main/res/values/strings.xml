@@ -4,6 +4,13 @@
     <string name="auth_welcome_title">Добро пожаловать\nв CoFlow</string>
     <string name="auth_subtitle_login">Авторизация</string>
     <string name="auth_subtitle_register">Регистрация</string>
+    <string name="my_tasks_header">Мои задачи</string>
+    <string name="my_tasks_active">активных</string>
+    <string name="my_tasks_completed">завершенных</string>
+    <string name="create_task_header">Создание задачи</string>
+    <string name="choose_project_header">Выберите проект</string>
+    <string name="choose_date_header">Дата окончания</string>
+    <string name="choose_assignee_header">Добавить исполнителя</string>
 
     <!-- Поля ввода -->
     <string name="auth_label_username">Имя пользователя</string>
@@ -28,6 +35,29 @@
     <string name="auth_error_invalid_contact">Проверьте формат почты или телефона</string>
     <string name="auth_error_short_password">Минимум 8 символов</string>
     <string name="auth_error_not_equal_password">Пароли не совпадают</string>
+    <string name="task_outdated">Просрочено</string>
 
+    <!-- Группы -->
+    <string name="tasks_group_planned">К исполнению</string>
+    <string name="tasks_group_active">В процессе</string>
+    <string name="tasks_group_completed">Завершены</string>
+    <string name="tasks_group_today">Сегодня</string>
+    <string name="tasks_group_this_week">Эта неделя</string>
+    <string name="tasks_group_next_week">Следующая неделя</string>
+
+    <!-- Группировка -->
+    <string name="grouping_header">Группировка</string>
+    <string name="grouping_status">По статусу</string>
+    <string name="grouping_deadline">По сроку</string>
+
+    <!-- Фильтры -->
+    <string name="filter_header">Фильтр</string>
+    <string name="filter_none">Без фильтра</string>
+    <string name="filter_mine">Мои</string>
+
+    <!-- Навигация -->
+    <string name="navigation_tasks">Мои задачи</string>
+    <string name="navigation_projects">Проекты</string>
+    <string name="navigation_profile">Профиль</string>
 
 </resources>

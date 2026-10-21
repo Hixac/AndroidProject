@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
 
 @Composable
-fun ChoseProjectScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Unit) {
+fun ChooseProjectScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Unit) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var selectedProject by rememberSaveable { mutableStateOf("Проект 1") }
     val projects = remember { listOf("Проект 1", "Проект 2", "Проект 3", "Проект 4", "Проект 5") }
@@ -87,6 +87,6 @@ fun ChoseProjectScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> 
 
 @Preview(name = "Выбор проекта", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
-private fun ChoseProjectScreenPreview() {
-    CoFlowTheme { ChoseProjectScreen(onBackClick = {}, onConfirmSelection = {}) }
+private fun ChooseProjectScreenPreview() {
+    CoFlowTheme { ChooseProjectScreen(onBackClick = {}, onConfirmSelection = {}) }
 }

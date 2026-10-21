@@ -11,12 +11,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.coflow.ui.components.*
 import com.example.coflow.ui.theme.*
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.coflow.R
 
 data class CreateTaskFormData(
     val title: String, val description: String, val assignees: String,
@@ -46,7 +48,7 @@ fun CreateTaskScreen(
             Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
 
             CoFlowScreenHeader(
-                title = "Создание задачи",
+                title = stringResource(R.string.create_task_header),
                 onBackClick = { focusManager.clearFocus(); onBackClick() }
             )
 

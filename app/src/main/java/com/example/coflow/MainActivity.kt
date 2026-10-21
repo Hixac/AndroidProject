@@ -12,9 +12,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.coflow.ui.auth.AuthRoute
-import com.example.coflow.ui.tasks.ChoseAssigneeScreen
-import com.example.coflow.ui.tasks.ChoseDateScreen
-import com.example.coflow.ui.tasks.ChoseProjectScreen
+import com.example.coflow.ui.tasks.ChooseAssigneeScreen
+import com.example.coflow.ui.tasks.ChooseDateScreen
+import com.example.coflow.ui.tasks.ChooseProjectScreen
 import com.example.coflow.ui.tasks.CreateTaskScreen
 import com.example.coflow.ui.tasks.TasksScreen
 import com.example.coflow.ui.theme.CoFlowTheme
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
                         // Экран выбора исполнителей
                         composable(Screen.CHOOSE_ASSIGNEE) {
-                            ChoseAssigneeScreen(
+                            ChooseAssigneeScreen(
                                 onBackClick = { navController.popBackStack() },
                                 onConfirmSelection = {
                                     // TODO: Здесь нужно получить выбранные данные и передать их обратно (например, через ViewModel)
@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
 
                         // Экран выбора проекта
                         composable(Screen.CHOOSE_PROJECT) {
-                            ChoseProjectScreen(
+                            ChooseProjectScreen(
                                 onBackClick = { navController.popBackStack() },
                                 onConfirmSelection = {
                                     // TODO: Обработать выбор проекта
@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
 
                         // Экран выбора даты
                         composable(Screen.CHOOSE_DATE) {
-                            ChoseDateScreen(
+                            ChooseDateScreen(
                                 onBackClick = { navController.popBackStack() },
                                 onConfirmSelection = {
                                     // TODO: Обработать выбор даты

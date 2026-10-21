@@ -28,7 +28,7 @@ import androidx.compose.foundation.clickable
 data class Assignee(val id: String, val name: String, val email: String, val initials: String, val avatarColor: Color)
 
 @Composable
-fun ChoseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assignee>) -> Unit) {
+fun ChooseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assignee>) -> Unit) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val allAssignees = remember {
         listOf(
@@ -135,6 +135,6 @@ fun ChoseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assig
 
 @Preview(name = "Выбор исполнителя", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
-private fun ChoseAssigneeScreenPreview() {
-    CoFlowTheme { ChoseAssigneeScreen(onBackClick = {}, onConfirmSelection = {}) }
+private fun ChooseAssigneeScreenPreview() {
+    CoFlowTheme { ChooseAssigneeScreen(onBackClick = {}, onConfirmSelection = {}) }
 }
