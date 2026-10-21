@@ -24,6 +24,8 @@ import com.example.coflow.ui.components.*
 import com.example.coflow.ui.theme.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.res.stringResource
+import com.example.coflow.R
 
 data class Assignee(val id: String, val name: String, val email: String, val initials: String, val avatarColor: Color)
 
@@ -60,14 +62,14 @@ fun ChooseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assi
         Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
 
             CoFlowScreenHeader(
-                title = "Добавить исполнителя",
+                title = stringResource(R.string.choose_assignee_header),
                 onBackClick = { focusManager.clearFocus(); onBackClick() }
             )
 
             CoFlowGlassTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = "Имя или почта",
+                placeholder = stringResource(R.string.create_task_choose_assignee_placeholder),
                 leadingIcon = "search",
                 keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = androidx.compose.foundation.text.KeyboardActions(onSearch = { focusManager.clearFocus() })
@@ -76,7 +78,7 @@ fun ChooseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assi
             Spacer(Modifier.height(20.dp))
 
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "Исполнители", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = CoFlowColors.TextPrimary)
+                Text(text = stringResource(R.string.create_task_assignee), fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = CoFlowColors.TextPrimary)
                 Text(text = "${allAssignees.size}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = CoFlowColors.TextSecondary)
             }
 
@@ -121,7 +123,7 @@ fun ChooseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assi
                     fontSize = 12.sp, fontWeight = FontWeight.Medium, color = CoFlowColors.TextPrimary
                 )
                 CoFlowPrimaryButton(
-                    text = "Добавить исполнителей",
+                    text = stringResource(R.string.add_assignee_button),
                     onClick = {
                         focusManager.clearFocus()
                         onConfirmSelection(allAssignees.filter { selectedIds.contains(it.id) })

@@ -43,6 +43,8 @@
 
         <string name="create_task_choose_project_name">Name of project</string>
 
+        <string name="create_task_choose_assignee_placeholder">Name or email</string>
+
         <!-- Кнопки -->
         <string name="auth_button_login">Log in</string>
         <string name="auth_button_register">Sign up</string>
@@ -53,6 +55,8 @@
         <string name="create_task_button">Create task</string>
 
         <string name="done_button">Done</string>
+
+        <string name="add_assignee_button">Add assignees</string>
 
         <!-- Ошибки -->
         <string name="auth_error_invalid_contact">Check email or phone format</string>
@@ -70,6 +74,8 @@
         <string name="tasks_group_next_week">Next week</string>
 
         <string name="create_task_projects">Projects</string>
+
+        <string name="create_task_assignee">Assignees</string>
 
         <!-- Группировка -->
         <string name="grouping_header">Grouping</string>
