@@ -41,6 +41,8 @@
         <string name="creation_task_deadline_label">Deadline</string>
         <string name="creation_task_deadline_placeholder">Choose date</string>
 
+        <string name="create_task_choose_project_name">Name of project</string>
+
         <!-- Кнопки -->
         <string name="auth_button_login">Log in</string>
         <string name="auth_button_register">Sign up</string>
@@ -49,6 +51,8 @@
         <string name="auth_toggle_to_login">Already have an account? Log in</string>
 
         <string name="create_task_button">Create task</string>
+
+        <string name="done_button">Done</string>
 
         <!-- Ошибки -->
         <string name="auth_error_invalid_contact">Check email or phone format</string>
@@ -60,9 +64,12 @@
         <string name="tasks_group_planned">For execution</string>
         <string name="tasks_group_active">In process</string>
         <string name="tasks_group_completed">Completed</string>
+
         <string name="tasks_group_today">Today</string>
         <string name="tasks_group_this_week">This week</string>
         <string name="tasks_group_next_week">Next week</string>
+
+        <string name="create_task_projects">Projects</string>
 
         <!-- Группировка -->
         <string name="grouping_header">Grouping</string>

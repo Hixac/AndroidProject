@@ -8,7 +8,7 @@
     <string name="my_tasks_active">активных</string>
     <string name="my_tasks_completed">завершенных</string>
     <string name="create_task_header">Создание задачи</string>
-    <string name="choose_project_header">Выберите проект</string>
+    <string name="choose_project_header">Выбор проекта</string>
     <string name="choose_date_header">Дата окончания</string>
     <string name="choose_assignee_header">Добавить исполнителя</string>
 
@@ -40,6 +40,8 @@
     <string name="creation_task_deadline_label">Дата окончания</string>
     <string name="creation_task_deadline_placeholder">Выберите дату</string>
 
+    <string name="create_task_choose_project_name">Название проекта</string>
+
     <!-- Кнопки -->
     <string name="auth_button_login">Войти</string>
     <string name="auth_button_register">Зарегистрироваться</string>
@@ -48,6 +50,8 @@
     <string name="auth_toggle_to_login">Уже существует аккаунт? Войти</string>
 
     <string name="create_task_button">Создать задачу</string>
+
+    <string name="done_button">Готово</string>
 
     <!-- Ошибки -->
     <string name="auth_error_invalid_contact">Проверьте формат почты или телефона</string>
@@ -59,9 +63,12 @@
     <string name="tasks_group_planned">К исполнению</string>
     <string name="tasks_group_active">В процессе</string>
     <string name="tasks_group_completed">Завершены</string>
+
     <string name="tasks_group_today">Сегодня</string>
     <string name="tasks_group_this_week">Эта неделя</string>
     <string name="tasks_group_next_week">Следующая неделя</string>
+
+    <string name="create_task_projects">Проекты</string>
 
     <!-- Группировка -->
     <string name="grouping_header">Группировка</string>
