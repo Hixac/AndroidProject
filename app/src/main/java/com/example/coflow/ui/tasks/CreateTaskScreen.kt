@@ -88,8 +88,8 @@ fun CreateTaskScreen(
                     focusManager.clearFocus()
                     onCreateTask(CreateTaskFormData(title.trim(), description.trim(), assignees.trim(), project.trim(), dueDate.trim()))
                 },
-                enabled = canCreate
-
+                enabled = canCreate,
+                modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
             )
         }
     }

@@ -38,37 +38,30 @@ fun TaskDetailScreen(
             .fillMaxSize()
             .background(coFlowTasksBackgroundBrush())
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 38.dp, start = CoFlowSpacing.ScreenHorizontal, end = CoFlowSpacing.ScreenHorizontal)
-        ) {
-
-        CoFlowScreenHeader(
-            title = "Задача",
-            onBackClick = onBackClick,
-            modifier = Modifier.padding(bottom = 16.dp), // Сохраняем ваш нижний отступ
-            trailingContent = {
-                // Карандаш (показываем только если статус TODO)
-                if (task.status == TaskStatus.TODO) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(CoFlowColors.Blue)
-                            .clickable { onEditClick() },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CoFlowIcon(
-                            name = "edit",
-                            modifier = Modifier.size(18.dp),
-                            color = Color.White
-                        )
+        Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
+            CoFlowScreenHeader(
+                title = "Задача",
+                onBackClick = onBackClick,
+                trailingContent = {
+                    // Карандаш (показываем только если статус TODO)
+                    if (task.status == TaskStatus.TODO) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(CoFlowColors.Blue)
+                                .clickable { onEditClick() },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CoFlowIcon(
+                                name = "edit",
+                                modifier = Modifier.size(18.dp),
+                                color = Color.White
+                            )
+                        }
                     }
                 }
-            }
-        )
-
+            )
 
             // Основной контент
             Column(
@@ -179,7 +172,7 @@ fun TaskDetailScreen(
                 CoFlowPrimaryButton(
                     text = if (task.status == TaskStatus.TODO) "Взять задачу" else "Выполнить",
                     onClick = { /* TODO: София подвяжет смену статуса */ },
-                    modifier = Modifier.padding(bottom = 24.dp)
+                    modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
                 )
             }
         }

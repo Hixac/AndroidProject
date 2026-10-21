@@ -58,7 +58,6 @@ fun ChoseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assig
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
         Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
-
             CoFlowScreenHeader(
                 title = "Добавить исполнителя",
                 onBackClick = { focusManager.clearFocus(); onBackClick() }
@@ -114,7 +113,7 @@ fun ChoseAssigneeScreen(onBackClick: () -> Unit, onConfirmSelection: (List<Assig
                 }
             }
 
-            Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 12.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 16.dp)) {
                 Text(
                     text = getSelectedText(selectedIds.size),
                     modifier = Modifier.padding(bottom = 12.dp, start = 4.dp),

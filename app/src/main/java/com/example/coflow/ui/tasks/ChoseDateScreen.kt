@@ -86,7 +86,8 @@ fun ChoseDateScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> Uni
                 onClick = {
                     focusManager.clearFocus()
                     onConfirmSelection(selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
-                }
+                },
+                modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
             )
         }
     }
