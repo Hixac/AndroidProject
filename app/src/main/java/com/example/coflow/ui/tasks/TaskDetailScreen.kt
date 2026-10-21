@@ -44,39 +44,12 @@ fun TaskDetailScreen(
                 .padding(top = 38.dp, start = CoFlowSpacing.ScreenHorizontal, end = CoFlowSpacing.ScreenHorizontal)
         ) {
 
-            // Шапка
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Кнопка Назад
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .clickable { onBackClick() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    CoFlowIcon(
-                        name = "back",
-                        modifier = Modifier.size(20.dp),
-                        color = CoFlowColors.TextSecondary
-                    )
-                }
-
-                Spacer(Modifier.width(8.dp))
-
-                Text(
-                    text = "Задача",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = CoFlowColors.TextPrimary,
-                    modifier = Modifier.weight(1f)
-                )
-
-                // Карандаш
+        CoFlowScreenHeader(
+            title = "Задача",
+            onBackClick = onBackClick,
+            modifier = Modifier.padding(bottom = 16.dp), // Сохраняем ваш нижний отступ
+            trailingContent = {
+                // Карандаш (показываем только если статус TODO)
                 if (task.status == TaskStatus.TODO) {
                     Box(
                         modifier = Modifier
@@ -94,6 +67,8 @@ fun TaskDetailScreen(
                     }
                 }
             }
+        )
+
 
             // Основной контент
             Column(
