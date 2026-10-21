@@ -39,7 +39,7 @@ private enum class TaskGrouping { STATUS, DEADLINE }
 private data class TaskGroup(val id: String, val title: String, val tasks: List<Task>)
 
 @Composable
-fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
+fun TasksScreen(onNavigateToCreateTask: () -> Unit, onNavigateToTaskDetail: (Int) -> Unit) {
     var grouping by remember { mutableStateOf(TaskGrouping.STATUS) }
     var selectedFilters by remember { mutableStateOf(setOf<String>()) }
     var collapsedGroups by remember { mutableStateOf(setOf("IN_PROGRESS")) }
@@ -124,7 +124,8 @@ fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
                     TaskGroupCard(
                         group = group,
                         expanded = group.id !in collapsedGroups,
-                        onToggle = { collapsedGroups = if (group.id in collapsedGroups) collapsedGroups - group.id else collapsedGroups + group.id }
+                        onToggle = { collapsedGroups = if (group.id in collapsedGroups) collapsedGroups - group.id else collapsedGroups + group.id },
+                        onTaskClick = { task -> onNavigateToTaskDetail(task.id) }
                     )
                 }
                 Spacer(Modifier.height(18.dp))
@@ -179,7 +180,7 @@ fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
 }
 
 @Composable
-private fun TaskGroupCard(group: TaskGroup, expanded: Boolean, onToggle: () -> Unit) {
+private fun TaskGroupCard(group: TaskGroup, expanded: Boolean, onToggle: () -> Unit, onTaskClick: (Task) -> Unit) {
     CoFlowGlassCard(modifier = Modifier.fillMaxWidth().clickable(onClick = onToggle)) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(text = group.title, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = CoFlowColors.TextPrimary)
@@ -198,7 +199,7 @@ private fun TaskGroupCard(group: TaskGroup, expanded: Boolean, onToggle: () -> U
             } else {
                 Spacer(Modifier.height(3.dp))
                 group.tasks.forEachIndexed { index, task ->
-                    TaskRow(task)
+                    TaskRow(task = task, onClick = { onTaskClick(task) })
                     if (index < group.tasks.lastIndex) {
                         Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(CoFlowGlassStyles.BlueBorder.copy(alpha = 0.45f)))
                     }
@@ -209,9 +210,9 @@ private fun TaskGroupCard(group: TaskGroup, expanded: Boolean, onToggle: () -> U
 }
 
 @Composable
-private fun TaskRow(task: Task) {
+private fun TaskRow(task: Task, onClick: () -> Unit) {
     val formatter = remember { DateTimeFormatter.ofPattern("dd.MM.yy") }
-    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp).clickable { onClick() }) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = task.title, fontSize = 12.sp, fontWeight = FontWeight.Medium,
@@ -319,5 +320,10 @@ private fun GlassFilterOption(title: String, selected: Boolean, onClick: () -> U
 @Preview(name = "Tasks Screen - Phone", showBackground = true, widthDp = 390, heightDp = 844, showSystemUi = true)
 @Composable
 private fun TasksScreenPreview() {
-    CoFlowTheme { TasksScreen(onNavigateToCreateTask = { println("🔥 PREVIEW: Нажата кнопка создания задачи (+)") }) }
+    CoFlowTheme {
+        TasksScreen(
+            onNavigateToCreateTask = { println("🔥 PREVIEW: Нажата кнопка создания задачи (+)") },
+            onNavigateToTaskDetail = { id -> println("PREVIEW: Нажата задача с ID: $id") } // <--- ДОБАВИЛИ ВОТ ЭТО
+        )
+    }
 }
