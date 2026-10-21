@@ -89,8 +89,7 @@ fun TasksScreen(onNavigateToCreateTask: () -> Unit) {
     }
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
-        Column(modifier = Modifier.fillMaxSize().padding(top = 30.dp, start = CoFlowSpacing.ScreenHorizontal, end = CoFlowSpacing.ScreenHorizontal)) {
-
+            Column(modifier = Modifier.fillMaxSize().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
             // ИСПРАВЛЕНО: Единый, чистый заголовок без стрелки назад, но с подзаголовком и колокольчиком
             CoFlowScreenHeader(
                 title = "Мои задачи",

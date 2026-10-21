@@ -28,7 +28,7 @@ fun CoFlowScreenHeader(
     trailingContent: @Composable (() -> Unit)? = null // <-- Слот для правой части (например, колокольчик)
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(top = 30.dp, bottom = 22.dp),
+        modifier = modifier.fillMaxWidth().padding(top = 60.dp, bottom = 22.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

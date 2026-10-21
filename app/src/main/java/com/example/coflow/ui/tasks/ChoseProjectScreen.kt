@@ -31,7 +31,7 @@ fun ChoseProjectScreen(onBackClick: () -> Unit, onConfirmSelection: (String) -> 
     BackHandler(onBack = onBackClick)
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
-        Column(modifier = Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
+            Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().imePadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
 
             CoFlowScreenHeader(
                 title = "Выбор проекта",

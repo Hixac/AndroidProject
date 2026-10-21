@@ -43,7 +43,7 @@ fun CreateTaskScreen(
     BackHandler(onBack = onBackClick)
 
     Box(modifier = Modifier.fillMaxSize().background(coFlowTasksBackgroundBrush())) {
-        Column(modifier = Modifier.fillMaxSize().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
+            Column(modifier = Modifier.fillMaxSize().navigationBarsPadding().padding(horizontal = CoFlowSpacing.ScreenHorizontal)) {
 
             CoFlowScreenHeader(
                 title = "Создание задачи",
@@ -80,7 +80,6 @@ fun CreateTaskScreen(
                     keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                     keyboardActions = androidx.compose.foundation.text.KeyboardActions(onDone = { focusManager.clearFocus() })
                 )
-                Spacer(Modifier.height(16.dp))
             }
 
             CoFlowPrimaryButton(
@@ -90,6 +89,7 @@ fun CreateTaskScreen(
                     onCreateTask(CreateTaskFormData(title.trim(), description.trim(), assignees.trim(), project.trim(), dueDate.trim()))
                 },
                 enabled = canCreate
+
             )
         }
     }
