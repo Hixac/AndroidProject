@@ -7,6 +7,7 @@ import com.example.coflow.data.firebase.FirebaseAuthRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 enum class AuthMode {
@@ -26,6 +27,8 @@ data class AuthUiState(
     val confirmError: String? = null,
     val isSubmitting: Boolean = false,
     val errorMessage: String? = null,
+    val currentUser: String? = null,
+    val isAuthorized: Boolean = false
 )
 
 class AuthViewModel(
@@ -35,68 +38,80 @@ class AuthViewModel(
     val state: StateFlow<AuthUiState> = _state.asStateFlow()
 
     fun onUsernameChange(value: String) {
-        _state.value = _state.value.copy(username = value, usernameError = null)
+        _state.update { it.copy(username = value, usernameError = null) }
     }
 
     fun onContactChange(value: String) {
-        _state.value = _state.value.copy(contact = value, contactError = null)
+        _state.update { it.copy(contact = value, contactError = null) }
     }
 
     fun onPasswordChange(value: String) {
-        _state.value = _state.value.copy(password = value, passwordError = null)
+        _state.update { it.copy(password = value, passwordError = null) }
     }
 
     fun onConfirmChange(value: String) {
-        _state.value = _state.value.copy(confirmPassword = value, confirmError = null)
+        _state.update { it.copy(confirmPassword = value, confirmError = null) }
     }
 
     fun onToggleMode() {
-        // При переключении режима очищаем поля и ошибки для чистого старта
-        val newMode = if (_state.value.mode == AuthMode.LOGIN) AuthMode.REGISTER else AuthMode.LOGIN
-        _state.value = AuthUiState(mode = newMode)
+        // При переключении режима очищаем поля и ошибки
+        _state.update {
+            AuthUiState(mode = if (it.mode == AuthMode.LOGIN) AuthMode.REGISTER else AuthMode.LOGIN)
+        }
     }
 
-    fun onSubmit(onAuthSuccess: () -> Unit) {
+    fun onSubmit() {
         val current = _state.value
 
-        // Валидация имени пользователя (только для регистрации)
+        // Валидация имени (только для регистрации)
         val usernameError = if (current.mode == AuthMode.REGISTER && current.username.isBlank()) {
             "Введите имя пользователя"
+        } else if (current.mode == AuthMode.REGISTER && current.username.length < 2) {
+            "Имя слишком короткое"
         } else null
 
-        // Валидация почты/телефона
-        val contactError = if (current.contact.isBlank()) {
-            "Введите почту или телефон"
-        } else null
+        // Валидация Email или Телефона
+        val contactError = when {
+            current.contact.isBlank() -> "Введите почту или телефон"
+            current.contact.contains("@") && !android.util.Patterns.EMAIL_ADDRESS.matcher(current.contact).matches() -> "Неверный формат email"
+            !current.contact.contains("@") && current.contact.filter { it.isDigit() }.length < 10 -> "Неверный формат телефона"
+            else -> null
+        }
 
-        // Валидация пароля
-        val passwordError = if (current.password.length < 8) {
-            "Минимум 8 символов"
-        } else null
+        // Валидация пароля (минимум 8 символов, хотя бы одна буква и цифра)
+        val passwordError = when {
+            current.password.length < 8 -> "Пароль должен быть не менее 8 символов"
+            !current.password.any { it.isDigit() } -> "Пароль должен содержать хотя бы одну цифру"
+            !current.password.any { it.isLetter() } -> "Пароль должен содержать хотя бы одну букву"
+            else -> null
+        }
 
-        // Валидация подтверждения пароля (только для регистрации)
+        // Валидация подтверждения пароля
         val confirmError = if (current.mode == AuthMode.REGISTER && current.password != current.confirmPassword) {
             "Пароли не совпадают"
         } else null
 
         if (usernameError != null || contactError != null || passwordError != null || confirmError != null) {
-            _state.value = current.copy(
-                usernameError = usernameError,
-                contactError = contactError,
-                passwordError = passwordError,
-                confirmError = confirmError,
-                isSubmitting = false
-            )
+            _state.update {it.copy(
+                    usernameError = usernameError,
+                    contactError = contactError,
+                    passwordError = passwordError,
+                    confirmError = confirmError,
+                    isSubmitting = false
+                )
+            }
             return
         }
 
-        _state.value = current.copy(
-            isSubmitting = true,
-            usernameError = null,
-            contactError = null,
-            passwordError = null,
-            confirmError = null
-        )
+        _state.update {it.copy(
+                isSubmitting = true,
+                usernameError = null,
+                contactError = null,
+                passwordError = null,
+                confirmError = null,
+                errorMessage = null
+            )
+        }
 
         // Вызов бэкенда
         viewModelScope.launch {
@@ -107,15 +122,20 @@ class AuthViewModel(
             }
 
             result.fold(
-                onSuccess = {
-                    _state.value = _state.value.copy(isSubmitting = false)
-                    onAuthSuccess()
+                onSuccess = { user ->
+                    _state.update {it.copy(
+                            isSubmitting = false,
+                            currentUser = user,
+                            isAuthorized = true
+                        )
+                    }
                 },
                 onFailure = { error ->
-                    _state.value = _state.value.copy(
-                        isSubmitting = false,
-                        errorMessage = error.message
-                    )
+                    _state.update {it.copy(
+                            isSubmitting = false,
+                            errorMessage = error.message ?: "Неизвестная ошибка"
+                        )
+                    }
                 }
             )
         }
