@@ -1,6 +1,6 @@
-name: CI pipeline
+name: CI pipeline on push
 
-on: [push, pull_request]
+on: [push]
 
 # Отменяем предыдущий прогон на той же ветке — не жжём минуты.
 concurrency:
