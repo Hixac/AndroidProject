@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.coflow.data.firebase.AuthRepository
 import com.example.coflow.data.firebase.FirebaseAuthRepositoryImpl
+import com.example.coflow.models.UserModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,12 +28,13 @@ data class AuthUiState(
     val confirmError: String? = null,
     val isSubmitting: Boolean = false,
     val errorMessage: String? = null,
-    val currentUser: String? = null,
+
+    val currentUser: UserModel? = null,
     val isAuthorized: Boolean = false
 )
 
 class AuthViewModel(
-    private val repository: AuthRepository = FirebaseAuthRepositoryImpl()
+    private val repository: AuthRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(AuthUiState())
     val state: StateFlow<AuthUiState> = _state.asStateFlow()
@@ -54,13 +56,19 @@ class AuthViewModel(
     }
 
     fun onToggleMode() {
-        // При переключении режима очищаем поля и ошибки
         _state.update {
-            AuthUiState(mode = if (it.mode == AuthMode.LOGIN) AuthMode.REGISTER else AuthMode.LOGIN)
+            it.copy(
+                mode = if (it.mode == AuthMode.LOGIN) AuthMode.REGISTER else AuthMode.LOGIN,
+                username = "", contact = "", password = "", confirmPassword = "",
+                usernameError = null, contactError = null,
+                passwordError = null, confirmError = null, errorMessage = null
+            )
         }
     }
 
     fun onSubmit() {
+        if (_state.value.isSubmitting) return
+
         val current = _state.value
 
         // Валидация имени (только для регистрации)
@@ -70,19 +78,18 @@ class AuthViewModel(
             "Имя слишком короткое"
         } else null
 
-        // Валидация Email или Телефона
+        // Валидация Email
         val contactError = when {
-            current.contact.isBlank() -> "Введите почту или телефон"
-            current.contact.contains("@") && !android.util.Patterns.EMAIL_ADDRESS.matcher(current.contact).matches() -> "Неверный формат email"
-            !current.contact.contains("@") && current.contact.filter { it.isDigit() }.length < 10 -> "Неверный формат телефона"
+            current.contact.isBlank() -> "Введите почту"
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(current.contact).matches() -> "Неверный формат email"
             else -> null
         }
 
         // Валидация пароля (минимум 8 символов, хотя бы одна буква и цифра)
         val passwordError = when {
-            current.password.length < 8 -> "Пароль должен быть не менее 8 символов"
-            !current.password.any { it.isDigit() } -> "Пароль должен содержать хотя бы одну цифру"
-            !current.password.any { it.isLetter() } -> "Пароль должен содержать хотя бы одну букву"
+            current.mode == AuthMode.REGISTER && current.password.length < 8 -> "Пароль должен быть не менее 8 символов"
+            current.mode == AuthMode.REGISTER && !current.password.any { it.isDigit() } -> "Пароль должен содержать хотя бы одну цифру"
+            current.mode == AuthMode.REGISTER && !current.password.any { it.isLetter() } -> "Пароль должен содержать хотя бы одну букву"
             else -> null
         }
 
