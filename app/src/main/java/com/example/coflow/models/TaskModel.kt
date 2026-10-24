@@ -1,15 +1,14 @@
 package com.example.coflow.models
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class TaskModel(
     val id: String = "",
     val title: String = "",
     val description: String = "",
     val projectId: String = "",
-    val authorId: UserModel? = null,
-    val assigneeIds: List<UserModel> = emptyList(),
-    val dueDate: LocalDate = LocalDate.now(),
+    val authorId: String = "",
+    val assigneeIds: String = "",
+    val deadline: LocalDateTime = LocalDateTime.now(),
     val status: TaskStatus = TaskStatus.TODO,
-    val isMine: Boolean = true
 )
