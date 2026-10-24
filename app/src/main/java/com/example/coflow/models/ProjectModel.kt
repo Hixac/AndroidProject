@@ -2,7 +2,7 @@ package com.example.coflow.models
 
 import java.time.LocalDateTime
 
-data class Project(
+data class ProjectModel(
     val id: String = "",
     val title: String = "",
     val description: String = "",
