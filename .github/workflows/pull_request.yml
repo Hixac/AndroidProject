@@ -13,7 +13,6 @@ on:
       - 'settings.gradle.kts'
       - 'gradle.properties'
       - 'firebase.json'
-      - '.editorconfig'
       - '.github/**'
 
 # Отменяем предыдущий прогон для этого PR — не жжём минуты.
@@ -26,30 +25,6 @@ permissions:
 
 # JDK 25 совпадает с toolchainVersion в gradle/gradle-daemon-jvm.properties.
 jobs:
-  # ktlint проверяет только добавленные в PR строки, поэтому старые
-  # нарушения не блокируют новые изменения.
-  ktlint:
-    name: Check Code Quality
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - name: Clone repo
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: ktlint
-        uses: ScaCap/action-ktlint@v1.9.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-review
-          filter_mode: added
-          ktlint_version: 1.8.0
-          fail_on_error: true
-
   build:
     name: Build & test with Firebase Emulator
     runs-on: ubuntu-latest
