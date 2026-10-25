@@ -21,8 +21,8 @@ import com.example.coflow.ui.tasks.TasksScreen
 import com.example.coflow.ui.theme.CoFlowTheme
 
 object Screen {
-    const val TASKS = "tasks"
-    const val CREATE_TASK = "create_task"
+    const val tasks = "tasks"
+    const val ssda = "create_task"
     const val CHOOSE_ASSIGNEE = "choose_assignee"
     const val CHOOSE_PROJECT = "choose_project"
     const val CHOOSE_DATE = "choose_date"
@@ -31,6 +31,7 @@ object Screen {
 }
 
 class MainActivity : ComponentActivity() {
+    var ___looool = 123;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
