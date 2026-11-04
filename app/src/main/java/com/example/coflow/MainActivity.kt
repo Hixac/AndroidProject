@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CoFlowTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
+                    gree_ting(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun gree_ting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
         modifier = modifier
@@ -40,8 +40,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun gre_pre_viewwwwwwwwwwwwwwwwwwwwwwwwwwwwakjsdasjdk() {
     CoFlowTheme {
-        Greeting("Android")
+        gree_ting("Android")
     }
 }
