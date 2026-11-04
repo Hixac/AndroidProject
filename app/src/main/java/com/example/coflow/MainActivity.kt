@@ -20,7 +20,7 @@ import com.example.coflow.ui.tasks.TaskDetailScreen
 import com.example.coflow.ui.tasks.TasksScreen
 import com.example.coflow.ui.theme.CoFlowTheme
 
-object Screen {
+object sc_reen {
     const val tasks = "tasks"
     const val ssda = "create_task"
     const val CHOOSE_ASSIGNEE = "choose_assignee"
