@@ -124,6 +124,11 @@ class MainActivity : ComponentActivity() {
                     }
                 } else {
                     AuthRoute(onAuthSuccess = { isAuthenticated = true })
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    gree_ting(
+                        name = "Android",
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
